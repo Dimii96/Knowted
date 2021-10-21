@@ -8,11 +8,10 @@ import { FontAwesomeIcon } from '@fortawesome/react-fontawesome'
 
 
 const Section = ({ id, title, content, sendNoteIDToParent, showBottomMenu, saveNote  }) => {
-  const [response, setResponse] = useState(content);
+  const [contentState, setContentState] = useState(content);
+  const [titleState, setTitleState] = useState(title);
   // const [saveIcon, setSaveIcon] = useState("cloud")
   // const [saveIconColour] = useState("aqua")
-  const [test, setTest] = useState();
-
 
   // const handleKeyDown = (event) => {
     
@@ -29,14 +28,14 @@ const Section = ({ id, title, content, sendNoteIDToParent, showBottomMenu, saveN
   //   }
   // }
 
-  const handleFocus = (event) => {
+  const handleFocus = () => {
     showBottomMenu(true)
     sendNoteIDToParent(id);
   }
 
   
-  const handleBlur = (event) => {
-    saveNote(id, response);
+  const SaveNote = () => {
+    saveNote(id, titleState, contentState);
     // showBottomMenu(false)
     // sendNoteIDToParent(null);
   }
@@ -52,14 +51,21 @@ const Section = ({ id, title, content, sendNoteIDToParent, showBottomMenu, saveN
 
       <div className="section-content">
         <div className="section-main p-0">
-          {/* <input type="text" className="col-12" readOnly value={test} /> */}
+          <input 
+            type="text"
+            className="note-title"
+            value={titleState} 
+            onBlur={SaveNote}
+            onChange={e => setTitleState(e.target.value)}
+            />
           <textarea
-            value={response ? response : ""}
+            className="note-content"
+            value={contentState ? contentState : ""}
             // onKeyUp={handleKeyDown}
             onFocus={handleFocus}
-            onBlur={handleBlur}
+            onBlur={SaveNote}
             //onChange={e => blah(e.target.value)}
-            onChange={e => setResponse(e.target.value)}
+            onChange={e => setContentState(e.target.value)}
             //onChange={({ target: { value } }) => { setResponse(value)} }
           />
         </div>
