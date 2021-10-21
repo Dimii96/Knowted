@@ -1,12 +1,10 @@
 // imports
 import React, { useState, useEffect, Component } from 'react';
 import sendAsync from '../message-control/renderer'
-import NewNoteButton from '../components/NewNoteButton'
 import BottomMenu from '../components/BottomMenu'
+
 // components
-import Header from '../components/Header'
 import Note from '../components/Note'
-import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
 
 
 const Home = () => {
@@ -17,7 +15,6 @@ const Home = () => {
     const [focussedNoteId, setFocussedNoteId] = useState(null)
     const [bottomMenuVisible, setBottomMenuVisible] = useState("false")
 
-    const [response, setResponse] = useState("");
     const [saveIcon, setSaveIcon] = useState("cloud")
     const [saveIconColour] = useState("aqua")
     
@@ -93,20 +90,25 @@ const Home = () => {
   }
 
 
-  const SaveNote = (id, content) => {
-    console.log("Saving note: " + id, content)
+  const SaveNote = (id, title, content) => {
+    console.log("Saving note: " + id, title, content)
     //setSaveIconColour("orange")
     setSaveIcon("cloud-upload-alt")
-
-    let query = `UPDATE notes SET content = '${content}' WHERE id = ${focussedNoteId};`;
-    setTest(query)
+    let query = 
+    `UPDATE notes
+    SET title = '${title}', 
+    content = '${content}'
+    WHERE id = ${focussedNoteId};`;
+    
+    console.log(query)
 
     sendAsync(query).then((result) => {
       if (!result) {
         alert("There was an issue saving!")
       } else { 
-        console.log("Saved!")}
-  });
+        console.log(result)
+      }
+    });
   // var delayInMilliseconds = 1000; //1 second
   // setTimeout(function () {
   //   //your code to be executed after 1 second
