@@ -1,4 +1,4 @@
-### Knowted
+### Knowted - Note the things you want to know 
 
 My take of a note taker using Electron, react and SQLite stack.
 Still in early pre-developement

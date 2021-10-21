@@ -24,8 +24,8 @@
     "build": "react-scripts build",
     "test": "react-scripts test",
     "eject": "react-scripts eject",
-    "electron-dev1": "concurrently \"BROWSER=none npm start\" \"wait-on http://localhost:3000 && electron .\"",
-    "electron-dev": "concurrently \"SET BROWSER=none && npm run start\" \"wait-on http://localhost:3000 && electron .\"",
+    "electron-mac": "concurrently \"BROWSER=none npm start\" \"wait-on http://localhost:3000 && electron .\"",
+    "electron-win": "concurrently \"SET BROWSER=none && npm run start\" \"wait-on http://localhost:3000 && electron .\"",
     "rebuild-sqlite3": "electron-rebuild -f -w sqlite3",
     "rebuild": "electron-rebuild -f -w better-sqlit3"
   },

@@ -1,49 +1,48 @@
 // imports
-import React, { useState, useEffect } from 'react';
+import React, { useState, useEffect, Component } from 'react';
 import sendAsync from '../message-control/renderer'
 import NewNoteButton from '../components/NewNoteButton'
 import BottomMenu from '../components/BottomMenu'
 // components
-// import Header from '../components/Header'
-import Section from "../components/Section"
+import Header from '../components/Header'
+import Note from '../components/Note'
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
+
 
 const Home = () => {
 
-  const [content, setContent] = useState([]);
-  // const [test, setTest] = useState();
-  const [tab] = useState(1)
+    const [notes, setNotes] = useState([]);
+    const [test, setTest] = useState("Notes");
+    const [tab, setTab] = useState(1)
+    const [focussedNoteId, setFocussedNoteId] = useState(null)
+    const [bottomMenuVisible, setBottomMenuVisible] = useState("false")
 
-
-
-
-  useEffect(() => {
-    LoadTab();
-
-
-    //eslint-disable-next-line react-hooks/exhaustive-deps
-  }, []);
-
-
-  //logger.trace("Entering cheese testing");
-  // Init load of notes
-  async function LoadTab() {
-    let query = `SELECT * FROM notes WHERE tab = ${tab} ORDER BY [order] ASC`;
-    await sendAsync(query).then((result) => {
-      if (result)
+    const [response, setResponse] = useState("");
+    const [saveIcon, setSaveIcon] = useState("cloud")
+    const [saveIconColour] = useState("aqua")
+    
+    useEffect(() => {
+      LoadTab();
+      //eslint-disable-next-line react-hooks/exhaustive-deps
+    }, []);
+      
+    //logger.trace("Entering cheese testing");
+    // Init load of notes
+    async function LoadTab() {
+      let query = `SELECT * FROM notes WHERE tab = ${tab} ORDER BY [order] ASC`;
+      await sendAsync(query).then((result) => {
+        if (result)
         //console.log(JSON.stringify(result))
-        setContent(result)
-
+        setNotes(result)
+        
     });
-    // setTest(content.length)  
   }
-
-  function AddNewNote() {
-
+  
+  const AddNewNote = (value) => {
     // Insert into db
     let query = `
     INSERT INTO notes ('order', tab)
-    VALUES (${content.length + 1}, ${tab});`;
+    VALUES (${notes.length + 1}, ${tab});`;
     sendAsync(query).then((result) => {
       console.log("New Insert Result: " + JSON.stringify(result))
       if (!result) {
@@ -60,43 +59,104 @@ const Home = () => {
             content: result.content
           }
           // Append to list
-          //setContent(content => content.concat(newRowToAdd))
-          setContent([content, newRowToAdd])
+          setNotes([notes, newRowToAdd])
         });
       }
-
+      
     });
-
-    // <BottomMenu id={3}/>
-
-
-
   }
 
+  const DeleteNote = (value) =>  {
+ 
+    if(focussedNoteId == null) alert("No note is selected to delete!")
+    let query = `DELETE FROM notes WHERE id = '${focussedNoteId}';`;
+    //if(confirm("Delete note?")) {
+    sendAsync(query).then((result) => {
+      if (!result) {
+        alert("There was an issue deleting!")
+      } else {
+        const newNotesList = notes.filter((item) => item.id !== focussedNoteId);
+        setNotes(newNotesList)
+        console.log("Notes: " + focussedNoteId + " has been deleted.")
+      }
+    });
+
+    //}
+  }
+
+  const sendNoteIDToParent = (index) => { 
+    setFocussedNoteId(index);
+  };
+
+  const showBottomMenu = (value) => {
+    setBottomMenuVisible(value ? "" : "disabled")
+  }
+
+
+  const SaveNote = (id, content) => {
+    console.log("Saving note: " + id, content)
+    //setSaveIconColour("orange")
+    setSaveIcon("cloud-upload-alt")
+
+    let query = `UPDATE notes SET content = '${content}' WHERE id = ${focussedNoteId};`;
+    setTest(query)
+
+    sendAsync(query).then((result) => {
+      if (!result) {
+        alert("There was an issue saving!")
+      } else { 
+        console.log("Saved!")}
+  });
+  // var delayInMilliseconds = 1000; //1 second
+  // setTimeout(function () {
+  //   //your code to be executed after 1 second
+  //   setSaveIcon("cloud")
+  //   //setSaveIconColour("aqua")
+  // }, delayInMilliseconds);
+  }
+    
+  
   return (
     <div className="container-fluid mt-2">
-      {/* <Header title="title" /> */}
-      <BottomMenu id={83} />
+      <p>Test: {test}</p>
 
       {/* <Header title={test} /> */}
       {/* <div className="row m-1">
           <div className="col-12 text-center">
       <NewNoteButton id={null} className="m-1 text-center" />
-
+      
       </div>
     </div>   */}
       <div id="notes">
-        {content.map(r =>
-          <Section key={r.id} id={r.id} title={JSON.stringify(r.id)} content={r.content} />
-        )}
+        {notes.map(r =>
+          <Note key={r.id}
+           id={r.id} 
+           title={JSON.stringify(r.id)} 
+           content={r.content} 
+           sendNoteIDToParent={sendNoteIDToParent}
+           showBottomMenu={showBottomMenu}
+           saveNote={SaveNote} />
+          )}
       </div>
 
+      <BottomMenu
+        id={focussedNoteId} 
+        disabled={bottomMenuVisible}
+        addNewNote={AddNewNote} 
+        deleteNote={DeleteNote}
+        saveNote={SaveNote} /> 
 
+      {/* {
+      bottomMenuVisible ? 
+        <BottomMenu id={focussedNoteId} /> 
+        : null
+      } */}
 
 
 
     </div >
-  );
+  ); 
+
 }
 
 export default Home;
