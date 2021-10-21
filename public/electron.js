@@ -24,6 +24,8 @@ function createWindow() {
         transparent: false,
         webPreferences: {
             nodeIntegration: true,
+            // enableRemoteModule: true,
+            contextIsolation: false,
         },
     });
     mainWindow.loadURL(
