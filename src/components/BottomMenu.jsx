@@ -1,50 +1,78 @@
 // imports
-import React, { useState } from 'react';
+import React from 'react';
+import { Link } from "react-router-dom"
+
+// import React, { useState } from 'react';
 import PropTypes from 'prop-types'
-import sendAsync from '../message-control/renderer'
+// import sendAsync from '../message-control/renderer'
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome'
-import { faBorderNone } from '@fortawesome/free-solid-svg-icons';
+// import { faBorderNone } from '@fortawesome/free-solid-svg-icons';
 
 
-const BottomMenu = ({ id, disabled, AddNewNote, deleteNote, saveNote }) => {
-  
+const BottomMenu = ({ id, disabled, noteHasFocus, AddNewNote, deleteNote, saveNote }) => {
+  // disabled = (noteHasFocus) ? false : true;
+
+  const DeleteNote = () => {
+    deleteNote()
+  }
+
   return (
 
-    <div id="bm-container" className={"row px-3" }>
+    <div id="bm-container" className={"row px-3"}>
 
-      <div id="bm-main" className="">
+        <div id="bm-main" className="">
 
-        <div className="bm-item">
-          {id}
-        </div> 
+          <button type="button" className={"btn btn-outline-dark btn-sm bm-item"}
+            onClick={saveNote}
+            disabled={disabled} >
+            <FontAwesomeIcon icon="save" />
+          </button>
 
-        <div className={"btn btn-outline-dark btn-sm bm-item"}
-          onClick={() => saveNote(id)} >
-          <FontAwesomeIcon icon="save" />
+          {/* <button type="button" className={"btn btn-outline-dark btn-sm bm-item"}
+            onClick={AddNewNote}
+            disabled={disabled} >
+            <FontAwesomeIcon icon="plus-circle" />
+          </button> */}
+
+          {/* <button type="button" className={"btn btn-outline-dark btn-sm bm-item"}
+            disabled={disabled} >
+            <FontAwesomeIcon icon="chevron-up" />
+          </button>
+
+          <button type="button" className={"btn btn-outline-dark btn-sm bm-item"}
+            disabled={disabled} >
+            <FontAwesomeIcon icon="chevron-down" />
+          </button> */}
+          
+          <div className="bm-item ">
+            <FontAwesomeIcon icon="grip-lines-vertical" />
+          </div>
+          <button type="button" className={"btn btn-outline-dark btn-sm bm-item"}
+            onClick={deleteNote}
+            disabled={disabled} >
+            <FontAwesomeIcon icon="trash" />
+          </button>
+
         </div>
 
-        <div className={"btn btn-outline-dark btn-sm bm-item " + disabled}
-        onClick={AddNewNote} >
+      <div id="bm-toggle" className="">
+
+        {/* <div className="btn btn-outline-dark btn-sm bm-item ">
+          <FontAwesomeIcon icon="chevron-right" />
+        </div> */}
+        <div className={"btn btn-outline-dark btn-sm bm-item"}
+        onClick={() => AddNewNote()}>
           <FontAwesomeIcon icon="plus-circle" />
         </div>
+        <Link className={"btn btn-outline-dark btn-sm bm-item"}
+          to="/settings" >
+          <FontAwesomeIcon icon="wrench" />
+        </Link>
 
-        <div className="bm-item ">
-          <FontAwesomeIcon icon="grip-lines-vertical" className="mx-1" />
+        <div className="bm-item">
+          {id >= 0 ? id : "n/a"}
         </div>
-
-        <div className={"btn btn-outline-dark btn-sm bm-item " + disabled} 
-        onClick={deleteNote} >
-        
-          <FontAwesomeIcon icon="trash" />
-        </div>
-
       </div>
-
-      {/* <div id="bm-toggle" className="">
-        <div className="btn btn-light btn-sm bm-item ">
-          <FontAwesomeIcon icon="chevron-right" />
-        </div>
-      </div> */}
 
     </div>
   );

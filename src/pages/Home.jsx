@@ -1,22 +1,22 @@
 // imports
-import React, { useState, useEffect, Component } from 'react';
+import React, { useState, useEffect /*, Component */} from 'react';
 import sendAsync from '../message-control/renderer'
 import BottomMenu from '../components/BottomMenu'
 
 // components
 import Note from '../components/Note'
+import SaveBar from '../components/SaveBar'
 
 
 const Home = () => {
 
     const [notes, setNotes] = useState([]);
     const [test, setTest] = useState("Notes");
-    const [tab, setTab] = useState(1)
+    const [tab] = useState(1)
     const [focussedNoteId, setFocussedNoteId] = useState(null)
-    const [bottomMenuVisible, setBottomMenuVisible] = useState("false")
+    const [noteHasFocus, setNoteHasFocus] = useState(false)
+    // const [noteButtonsDisabled] = useState(false)
 
-    const [saveIcon, setSaveIcon] = useState("cloud")
-    const [saveIconColour] = useState("aqua")
     
     useEffect(() => {
       LoadTab();
@@ -26,20 +26,20 @@ const Home = () => {
     //logger.trace("Entering cheese testing");
     // Init load of notes
     async function LoadTab() {
+      console.log("LOAD PAGE: " + new Date )
       let query = `SELECT * FROM notes WHERE tab = ${tab} ORDER BY [order] ASC`;
       await sendAsync(query).then((result) => {
         if (result)
         //console.log(JSON.stringify(result))
         setNotes(result)
-        
     });
   }
   
-  const AddNewNote = (value) => {
+  const AddNewNote = () => {
     // Insert into db
     let query = `
-    INSERT INTO notes ('order', tab)
-    VALUES (${notes.length + 1}, ${tab});`;
+    INSERT INTO notes (content, 'order', tab)
+    VALUES ('', ${notes.length + 1}, ${tab});`;
     sendAsync(query).then((result) => {
       console.log("New Insert Result: " + JSON.stringify(result))
       if (!result) {
@@ -52,7 +52,8 @@ const Home = () => {
           console.log(JSON.stringify(result))
           var newRowToAdd = {
             id: result.id,
-            title: "default",
+            order: result.order,
+            title: "",
             content: result.content
           }
           // Append to list
@@ -63,10 +64,11 @@ const Home = () => {
     });
   }
 
-  const DeleteNote = (value) =>  {
- 
+  const DeleteNote = (event) =>  {    
+    event.preventDefault();
     if(focussedNoteId == null) alert("No note is selected to delete!")
     let query = `DELETE FROM notes WHERE id = '${focussedNoteId}';`;
+    console.log("Deleting: " + focussedNoteId)
     //if(confirm("Delete note?")) {
     sendAsync(query).then((result) => {
       if (!result) {
@@ -78,7 +80,7 @@ const Home = () => {
       }
     });
 
-    //}
+    
   }
 
   const sendNoteIDToParent = (index) => { 
@@ -86,14 +88,13 @@ const Home = () => {
   };
 
   const showBottomMenu = (value) => {
-    setBottomMenuVisible(value ? "" : "disabled")
+    setNoteHasFocus(value)
   }
 
 
-  const SaveNote = (id, title, content) => {
+  const SaveNote = async (id, title, content) => {
     console.log("Saving note: " + id, title, content)
     //setSaveIconColour("orange")
-    setSaveIcon("cloud-upload-alt")
     let query = 
     `UPDATE notes
     SET title = '${title}', 
@@ -101,7 +102,10 @@ const Home = () => {
     WHERE id = ${focussedNoteId};`;
     
     console.log(query)
+    setTest(title + "  ---  " + content )
 
+    //await sendAsync(query)
+    
     sendAsync(query).then((result) => {
       if (!result) {
         alert("There was an issue saving!")
@@ -143,8 +147,9 @@ const Home = () => {
 
       <BottomMenu
         id={focussedNoteId} 
-        disabled={bottomMenuVisible}
-        addNewNote={AddNewNote} 
+        noteHasFocus={noteHasFocus}
+        disabled={false}
+        AddNewNote={AddNewNote} 
         deleteNote={DeleteNote}
         saveNote={SaveNote} /> 
 
@@ -154,9 +159,9 @@ const Home = () => {
         : null
       } */}
 
+      {/* <SaveBar status={""} /> */}
 
-
-    </div >
+    </div>
   ); 
 
 }

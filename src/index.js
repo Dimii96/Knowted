@@ -24,14 +24,14 @@ import {
     faCoffee, faPlus, faExclamationCircle, faCircle, faSave,
     faEdit, faCheck, faTimes, faCog, faFilter, faGripLinesVertical, faHome,
     faTrash, faSpinner, faCloud, faCloudUploadAlt, faCloudDownloadAlt, faPlusCircle,
-    faGripVertical, faEllipsisH, faChevronRight,
+    faGripVertical, faEllipsisH, faChevronRight, faChevronUp, faChevronDown, faWrench,
 } from '@fortawesome/free-solid-svg-icons'
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome'
 
 library.add(faCoffee, faPlus, faExclamationCircle, faCircle, faSave,
     faEdit, faCheck, faTimes, faCog, faFilter, faGripLinesVertical, faHome,
     faTrash, faSpinner, faCloud, faCloudUploadAlt, faCloudDownloadAlt, faPlusCircle,
-    faGripVertical, faEllipsisH, faChevronRight)
+    faGripVertical, faEllipsisH, faChevronRight, faChevronUp, faChevronDown, faWrench)
 
 
 ReactDOM.render(
