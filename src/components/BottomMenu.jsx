@@ -18,13 +18,16 @@ const BottomMenu = ({ id, disabled, noteHasFocus, AddNewNote, deleteNote, saveNo
 
   return (
 
-    <div id="bm-container" className={"row px-3"}>
+    <div id="bm-container" className={"row px-2"}>
 
         <div id="bm-main" className="">
 
-          <button type="button" className={"btn btn-outline-dark btn-sm bm-item"}
-            onClick={saveNote}
-            disabled={disabled} >
+          <button type="button"
+           className={"btn btn-outline-dark btn-sm bm-item"}
+            // onClick={saveNote}
+            onClick={() => alert("Manual save currently disabled")}
+            readonly
+            title="Save (currently disabled)" >
             <FontAwesomeIcon icon="save" />
           </button>
 

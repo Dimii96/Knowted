@@ -22,6 +22,7 @@ function createWindow() {
         //resizable: false,
         //fullscreen: true,
         transparent: false,
+
         webPreferences: {
             nodeIntegration: true,
             // enableRemoteModule: true,
@@ -36,6 +37,7 @@ function createWindow() {
     mainWindow.on('closed', () => {
         mainWindow = null;
     });
+    mainWindow.webContents.openDevTools();
 }
 
 app.on('ready', createWindow);

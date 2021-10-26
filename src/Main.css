@@ -521,18 +521,6 @@ body {
 }
 
 
-.note-content {
-
-}
-
-.note-title {
-  width: 100%;
-  background-color: #f1f1f1;
-  font-weight: bold;
-  border: none;
-  box-shadow: none;
-  padding-left: 15px;
-}
 
 #bm-container {
   position: fixed;
@@ -557,7 +545,8 @@ body {
 
 #bm-main,
 #bm-toggle {
-  padding-top: 6px;
+  /* padding-top: 6px; */
+  padding: 6px;
   width: auto;
   margin: 0 5px;
   border-radius: 5px;
@@ -598,10 +587,32 @@ div[contenteditable],
 }
 
 div[contenteditable]:focus,
-.section textarea:focus {
-  border: 2px solid #cccccc; 
-  /* background-color: #ff7979; */
+.section textarea:focus,
+.note-title:focus {
+  outline: none;
+  border: 2px solid #e1e1e1;
+  /* background-color: #f9f9f9; */
 }
+
+.note-title {
+  width: 100%;
+  background-color: #f1f1f1;
+  font-weight: bold;
+  border: none;
+  box-shadow: none;
+  padding-left: 15px;
+}
+
+/* .note-title:focus {
+  outline: none;
+  /* border: 2px solid #cccccc !important;   * /
+} */
+
+.note-content + {
+
+}
+
+
 .profile-item {
   margin-bottom: 15px;
 }

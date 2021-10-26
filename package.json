@@ -1,5 +1,5 @@
 {
-  "name": "ers-stack",
+  "name": "Knowted",
   "version": "0.1.0",
   "private": true,
   "dependencies": {
@@ -12,6 +12,7 @@
     "bootstrap": "^5.1.1",
     "cross-env": "^7.0.3",
     "electron-is-dev": "^1.2.0",
+    "electron-store": "^8.0.1",
     "prettier": "^2.0.5",
     "react": "^16.13.1",
     "react-dom": "^16.13.1",
