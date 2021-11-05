@@ -52,6 +52,9 @@ ReactDOM.render(
                             <li className="nav-item">
                                 <Link className="nav-link" to="/settings"><FontAwesomeIcon icon="cog" /></Link>
                             </li>
+                            <li className="nav-item">
+                                <Link className="nav-link" to="/app"><FontAwesomeIcon icon="circle" /></Link>
+                            </li>
                         </ul>
                     </div>
                 </div>

@@ -6,17 +6,17 @@ import { FontAwesomeIcon } from '@fortawesome/react-fontawesome'
 import { faBorderNone } from '@fortawesome/free-solid-svg-icons';
 
 
-const BottomMenu = ({ id, disabled, AddNewNote, deleteNote, saveNote }) => {
-  
+const BottomMenu = ({ id, disabled, addNewNote, deleteNote, saveNote }) => {
+
   return (
 
-    <div id="bm-container" className={"row px-3" }>
+    <div id="bm-container" className={"row px-3"}>
 
       <div id="bm-main" className="">
 
         <div className="bm-item">
           {id}
-        </div> 
+        </div>
 
         <div className={"btn btn-outline-dark btn-sm bm-item"}
           onClick={() => saveNote(id)} >
@@ -24,7 +24,7 @@ const BottomMenu = ({ id, disabled, AddNewNote, deleteNote, saveNote }) => {
         </div>
 
         <div className={"btn btn-outline-dark btn-sm bm-item " + disabled}
-        onClick={AddNewNote} >
+          onClick={() => addNewNote(id)} >
           <FontAwesomeIcon icon="plus-circle" />
         </div>
 
@@ -32,9 +32,9 @@ const BottomMenu = ({ id, disabled, AddNewNote, deleteNote, saveNote }) => {
           <FontAwesomeIcon icon="grip-lines-vertical" className="mx-1" />
         </div>
 
-        <div className={"btn btn-outline-dark btn-sm bm-item " + disabled} 
-        onClick={deleteNote} >
-        
+        <div className={"btn btn-outline-dark btn-sm bm-item " + disabled}
+          onClick={deleteNote} >
+
           <FontAwesomeIcon icon="trash" />
         </div>
 

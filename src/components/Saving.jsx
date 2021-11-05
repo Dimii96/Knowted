@@ -19,7 +19,7 @@ SaveBar.propTypes = {
 }
 
 SaveBar.defaultProps = {
-  title: "Task Tracker"
+  title: "Saving"
 }
 
 export default SaveBar;

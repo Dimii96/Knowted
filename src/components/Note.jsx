@@ -7,14 +7,14 @@ import { FontAwesomeIcon } from '@fortawesome/react-fontawesome'
 // https://medium.com/cameron-nokes/how-to-store-user-data-in-electron-3ba6bf66bc1e
 
 
-const Section = ({ id, title, content, sendNoteIDToParent, showBottomMenu, saveNote  }) => {
+const Section = ({ id, title, content, sendNoteIDToParent, showBottomMenu, saveNote }) => {
   const [contentState, setContentState] = useState(content);
   const [titleState, setTitleState] = useState(title);
   // const [saveIcon, setSaveIcon] = useState("cloud")
   // const [saveIconColour] = useState("aqua")
 
   // const handleKeyDown = (event) => {
-    
+
   //   event.preventDefault();
   //   saveNote(response);
   //   let charCode = String.fromCharCode(event.which).toLowerCase();
@@ -33,7 +33,7 @@ const Section = ({ id, title, content, sendNoteIDToParent, showBottomMenu, saveN
     sendNoteIDToParent(id);
   }
 
-  
+
   const SaveNote = () => {
     saveNote(id, titleState, contentState);
     // showBottomMenu(false)
@@ -51,13 +51,13 @@ const Section = ({ id, title, content, sendNoteIDToParent, showBottomMenu, saveN
 
       <div className="section-content">
         <div className="section-main p-0">
-          <input 
+          <input
             type="text"
             className="note-title"
-            value={titleState} 
+            value={titleState}
             onBlur={SaveNote}
             onChange={e => setTitleState(e.target.value)}
-            />
+          />
           <textarea
             className="note-content"
             value={contentState ? contentState : ""}
@@ -66,7 +66,7 @@ const Section = ({ id, title, content, sendNoteIDToParent, showBottomMenu, saveN
             onBlur={SaveNote}
             //onChange={e => blah(e.target.value)}
             onChange={e => setContentState(e.target.value)}
-            //onChange={({ target: { value } }) => { setResponse(value)} }
+          //onChange={({ target: { value } }) => { setResponse(value)} }
           />
         </div>
 
@@ -89,7 +89,7 @@ Section.propTypes = {
 }
 
 Section.defaultProps = {
-  title: "Task Tracker"
+  title: "Task Tracker Default"
 }
 
 export default Section;
