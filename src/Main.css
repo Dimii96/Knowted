@@ -89,6 +89,23 @@ body {
   /* overflow-y: scroll !important; Show vertical scrollbar */
 }
 
+body::-webkit-scrollbar {
+  width: 10px;               /* width of the entire scrollbar */
+}
+
+body::-webkit-scrollbar-track {
+  /* background: orange;        /* color of the tracking area */
+}
+
+body::-webkit-scrollbar-thumb {
+  background-color: #ccc;    /* color of the scroll thumb */
+  border-radius: 20px;       /* roundness of the scroll thumb */
+  border: 2px solid #f1f1f1;  /* creates padding around scroll thumb */
+}
+
+
+
+
 /* CLASS COL-XS TESTER */
 /* CLASS COL-SM TESTER */
 .col-width {
@@ -534,6 +551,19 @@ body {
   padding-left: 15px;
 }
 
+#footer {
+  position: fixed;
+  width: 100%;
+  height: 22px;
+  bottom: 0;
+  margin: 0;
+  left: 0;
+  font-size: 14px;
+  color: var(--charcoal);
+  background-color:#cccccc;
+  border-top: 1px solid #949494;
+}
+
 #bm-container {
   position: fixed;
   right: 10px;
@@ -575,6 +605,8 @@ body {
   font-size: 20px !important;
   border: red;
 }
+
+
 
 .boxsizingBorder {
   -webkit-box-sizing: border-box;

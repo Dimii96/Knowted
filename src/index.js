@@ -16,6 +16,9 @@ import About from "./pages/About"
 import Settings from "./pages/Settings"
 import App from "./pages/z_App"
 
+// Components
+import Footer from './components/Footer'
+
 
 // Font Awesome Icons
 import { library } from '@fortawesome/fontawesome-svg-core'
@@ -59,23 +62,14 @@ ReactDOM.render(
                     </div>
                 </div>
             </nav>
+        </main>
             <body>
-                {/* <Switch>
-          <Route path="/about">
-            <About />
-          </Route>
-          <Route path="/">
-            <Home />
-          </Route>
-        </Switch> */}
                 <Route exact path="/" component={Home} />
                 <Route path="/app" component={App} />
                 <Route path="/about" component={About} />
                 <Route path="/Settings" component={Settings} />
-                {/* <div id="save-bar"></div> */}
-
+                {/* <Footer /> */}
             </body>
-        </main>
     </Router>,
 
     // <React.StrictMode>

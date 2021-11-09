@@ -119,7 +119,7 @@ const Home = () => {
     
   
   return (
-    <div className="container-fluid mt-2">
+    <div id="Home" className="container-fluid mt-2">
       <p>Test: {test}</p>
 
       {/* <Header title={test} /> */}
@@ -153,7 +153,6 @@ const Home = () => {
         <BottomMenu id={focussedNoteId} /> 
         : null
       } */}
-
 
 
     </div >

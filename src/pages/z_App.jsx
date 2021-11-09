@@ -9,7 +9,7 @@ import BottomMenu from '../components/BottomMenu'
 //function App() {
 const App = () => {
 
-    const [message, setMessage] = useState('SELECT * FROM notes;');
+    // const [message, setMessage] = useState('SELECT * FROM notes;');
     const [response, setResponse] = useState();
     const [tab, setTab] = useState(1)
 
@@ -21,7 +21,7 @@ const App = () => {
 
 
     useEffect(() => {
-        let query = 'SELECT * FROM notes;'
+        let query = 'SELECT * FROM notes WHERE tab = 1;'
 
         send(query);
         //eslint-disable-next-line react-hooks/exhaustive-deps
@@ -29,6 +29,8 @@ const App = () => {
 
     function send(sql) {
         sendAsync(sql).then((result) => {
+            console.log(result[0])
+            setNotes([]);
             setNotes(result)
         });
     }
@@ -96,7 +98,8 @@ const App = () => {
         setBottomMenuVisible(value ? "" : "disabled")
     }
 
-    const SaveNote = (id, title, content) => {
+    // const SaveNote = (id, title, content) => {
+    async function SaveNote(id, title, content) {
         console.log("Saving note: " + id, title, content)
         //setSaveIconColour("orange")
         setSaveIcon("cloud-upload-alt")
@@ -107,14 +110,15 @@ const App = () => {
             WHERE id = ${focussedNoteId};`;
 
         console.log(query)
-
-        sendAsync(query).then((result) => {
-            if (!result) {
-                alert("There was an issue saving!")
-            } else {
-                console.log(result)
-            }
-        });
+        
+        await send(query)
+        // sendAsync(query).then((result) => {
+        //     if (!result) {
+        //         alert("There was an issue saving!")
+        //     } else {
+        //         console.log(result)
+        //     }
+        // });
         // var delayInMilliseconds = 1000; //1 second
         // setTimeout(function () {
         //   //your code to be executed after 1 second
