@@ -24,7 +24,7 @@ Still in a very early developemt stage and not very functional yet.
 
 Knowted uses a number of open source projects to work properly:
 
-* [Electron] - Buil GUI applications using web technologies
+* [Electron] - Build GUI applications using web technologies
 * [React] -  For building user interfaces or UI components 
 * [SQLite] - For saving data locally
 * [Bootstrap] - Great UI boilerplate for modern web apps
