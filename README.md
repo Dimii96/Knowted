@@ -4,7 +4,7 @@
 [![Build Status](https://travis-ci.org/dimii96/knowted.svg?branch=master)](https://travis-ci.org/dimii96/knowted)
 
 My take of a basic note editor for Windows and Mac.
-Still in a very early developemt stage and can be buggy.
+Still in a very early developemt stage and not very functional yet.
 
 ## Features
 
