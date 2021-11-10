@@ -46,6 +46,7 @@ ReactDOM.render(
                     <button className="navbar-toggler" type="button" data-target="#navbarNav" aria-controls="navbarNav" aria-expanded="false" aria-label="Toggle navigation">
                         <span className="navbar-toggler-icon" />
                     </button>
+
                     <div className="collapse navbar-collapse  justify-content-end" id="navbarNav">
                         <ul className="navbar-nav white">
 
@@ -63,13 +64,13 @@ ReactDOM.render(
                 </div>
             </nav>
         </main>
-            <body>
-                <Route exact path="/" component={Home} />
-                <Route path="/app" component={App} />
-                <Route path="/about" component={About} />
-                <Route path="/Settings" component={Settings} />
-                {/* <Footer /> */}
-            </body>
+        <body>
+            <Route exact path="/" component={Home} />
+            <Route path="/app" component={App} />
+            <Route path="/about" component={About} />
+            <Route path="/Settings" component={Settings} />
+            {/* <Footer /> */}
+        </body>
     </Router>,
 
     // <React.StrictMode>
