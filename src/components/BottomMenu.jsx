@@ -16,16 +16,15 @@ const BottomMenu = ({ id, disabled, addNewNote, deleteNote, saveNote }) => {
   }
 
   return (
-
     <div id="bm-container" className={"row px-3"}>
 
-        <div id="bm-main" className="">
+      <div id="bm-main" className="">
 
         <div className="bm-item">
           {id}
         </div>
 
-          {/* <button type="button" className={"btn btn-outline-dark btn-sm bm-item"}
+        {/* <button type="button" className={"btn btn-outline-dark btn-sm bm-item"}
             onClick={AddNewNote}
             disabled={disabled} >
             <FontAwesomeIcon icon="plus-circle" />
@@ -36,47 +35,49 @@ const BottomMenu = ({ id, disabled, addNewNote, deleteNote, saveNote }) => {
           <FontAwesomeIcon icon="plus-circle" />
         </div>
 
-          <button type="button" className={"btn btn-outline-dark btn-sm bm-item"}
-            disabled={disabled} >
-            <FontAwesomeIcon icon="chevron-down" />
-          </button> */}
-          
-          <div className="bm-item ">
-            <FontAwesomeIcon icon="grip-lines-vertical" />
-          </div>
-          <button type="button" className={"btn btn-outline-dark btn-sm bm-item"}
-            onClick={deleteNote}
-            disabled={disabled} >
-            <FontAwesomeIcon icon="trash" />
-          </button>
+        <button type="button" className={"btn btn-outline-dark btn-sm bm-item"}
+          disabled={disabled} >
+          <FontAwesomeIcon icon="chevron-down" />
+        </button>
+
+        <div className="bm-item ">
+          <FontAwesomeIcon icon="grip-lines-vertical" />
+        </div>
+        <button type="button" className={"btn btn-outline-dark btn-sm bm-item"}
+          onClick={deleteNote}
+          disabled={disabled} >
+          <FontAwesomeIcon icon="trash" />
+        </button>
 
         <div className={"btn btn-outline-dark btn-sm bm-item " + disabled}
           onClick={handleDelete} >
           <FontAwesomeIcon icon="trash" />
         </div>
 
-      <div id="bm-toggle" className="">
+        <div id="bm-toggle" className="">
 
-        {/* <div className="btn btn-outline-dark btn-sm bm-item ">
+          {/* <div className="btn btn-outline-dark btn-sm bm-item ">
           <FontAwesomeIcon icon="chevron-right" />
         </div> */}
-        <div className={"btn btn-outline-dark btn-sm bm-item"}
-        onClick={() => AddNewNote()}>
-          <FontAwesomeIcon icon="plus-circle" />
-        </div>
-        <Link className={"btn btn-outline-dark btn-sm bm-item"}
-          to="/settings" >
-          <FontAwesomeIcon icon="wrench" />
-        </Link>
+          <div className={"btn btn-outline-dark btn-sm bm-item"}
+            onClick={addNewNote}>
+            <FontAwesomeIcon icon="plus-circle" />
+          </div>
+          <Link className={"btn btn-outline-dark btn-sm bm-item"}
+            to="/settings" >
+            <FontAwesomeIcon icon="wrench" />
+          </Link>
 
-        <div className="bm-item">
-          {id >= 0 ? id : "n/a"}
+          <div className="bm-item">
+            {id >= 0 ? id : "n/a"}
+          </div>
         </div>
+
       </div>
-
     </div>
-  );
+  )
 }
+
 
 BottomMenu.propTypes = {
   title: PropTypes.string

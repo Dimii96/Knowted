@@ -14,7 +14,6 @@ function Settings() {
             <p>Application settings and options will go here</p>
             <Link className="App-link" to="/">Link to Home</Link>
           </div>
-          {/* <div className="section-footer">footer</div> */}
         </div>
       </div>
     </div>

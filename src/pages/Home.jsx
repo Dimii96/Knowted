@@ -5,7 +5,6 @@ import BottomMenu from '../components/BottomMenu'
 
 // components
 import Note from '../components/Note'
-import SaveBar from '../components/SaveBar'
 
 
 const Home = () => {
@@ -29,9 +28,8 @@ const Home = () => {
     async function LoadTab() {
       let query = `SELECT * FROM notes WHERE tab = ${tab} ORDER BY [order] ASC`;
       await sendAsync(query).then((result) => {
-        if (result)
-        setNotes(result)
-        
+        if (result) setNotes(result)
+        //console.log(result)
     });
   }
   
@@ -42,11 +40,9 @@ const Home = () => {
     INSERT INTO notes ('order', tab)
     VALUES (${notes.length + 1}, ${tab});`;
     await sendAsync(query).then((result) => {
-      console.log("New Insert Result: " + JSON.stringify(result))
+      //console.log("New Insert Result: " + JSON.stringify(result))
       if (!result) {
         alert("There was an issue creating new note.")
-      } else {
-
       }
     });
 
@@ -65,25 +61,25 @@ const Home = () => {
      });
   }
 
-  const AddNewNote = async () => {
-    let notesList = await storeGet("notes");
-    console.log(notesList)
-    var newNote = {
-      id: Math.floor(Math.random() * 2147483647),
-      title: "",
-      content: "",
-      order: 1,
-      tab: 1
-    }
-    notesList.push(newNote)
+  // const AddNewNote = async () => {
+  //   let notesList = await storeGet("notes");
+  //   console.log(notesList)
+  //   var newNote = {
+  //     id: Math.floor(Math.random() * 2147483647),
+  //     title: "",
+  //     content: "",
+  //     order: 1,
+  //     tab: 1
+  //   }
+  //   notesList.push(newNote)
 
-    let result = await storeSet("notes", notesList)
-    //console.log("Saved note: " + result);
-    if (result) {
-      setNotes(notes => notes.concat(newNote))
-      //setNotes(notes, [newNote])
-    }
-  }
+  //   let result = await storeSet("notes", notesList)
+  //   //console.log("Saved note: " + result);
+  //   if (result) {
+  //     setNotes(notes => notes.concat(newNote))
+  //     //setNotes(notes, [newNote])
+  //   }
+  // }
 
   const DeleteNote = async (event) => {
     event.preventDefault();
@@ -117,7 +113,7 @@ const Home = () => {
 
 
   const SaveNote = (id, title, content) => {
-    console.log("Saving note: " + id)
+    //console.log("Saving note: " + id)
     //setSaveIconColour("orange")
     setSaveIcon("cloud-upload-alt")
     let query = 
@@ -126,13 +122,13 @@ const Home = () => {
     content = '${content}'
     WHERE id = ${id};`;
     
-    console.log(query)
+    //console.log(query)
 
     sendAsync(query).then((result) => {
       if (!result) {
         alert("There was an issue saving!")
       } else { 
-        console.log("Saved: " + result)
+        //console.log("Saved: " + result)
       }
     });
   // var delayInMilliseconds = 1000; //1 second
@@ -175,15 +171,9 @@ const Home = () => {
         deleteNote={DeleteNote}
         saveNote={SaveNote} />
 
-      {/* {
-      bottomMenuVisible ?
-        <BottomMenu id={focussedNoteId} />
-        : null
-      } */}
 
-      {/* <SaveBar status={""} /> */}
 
-    </div >
+    </div>
   ); 
 
 }
