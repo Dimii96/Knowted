@@ -33,7 +33,6 @@ const Section = ({ id, title, content, sendNoteIDToParent, showBottomMenu, saveN
     sendNoteIDToParent(id);
   }
 
-
   const SaveNote = () => {
     saveNote(id, titleState, contentState);
     // showBottomMenu(false)
@@ -48,7 +47,6 @@ const Section = ({ id, title, content, sendNoteIDToParent, showBottomMenu, saveN
         </div>
       </div> */}
 
-
       <div className="section-content">
         <div className="section-main p-0">
           <input
@@ -56,6 +54,7 @@ const Section = ({ id, title, content, sendNoteIDToParent, showBottomMenu, saveN
             className="note-title"
             value={titleState}
             onBlur={SaveNote}
+            onFocus={handleFocus}
             onChange={e => setTitleState(e.target.value)}
           />
           <textarea

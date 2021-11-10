@@ -29,38 +29,39 @@ const Home = () => {
       let query = `SELECT * FROM notes WHERE tab = ${tab} ORDER BY [order] ASC`;
       await sendAsync(query).then((result) => {
         if (result)
-        //console.log(JSON.stringify(result))
         setNotes(result)
         
     });
   }
   
-  const AddNewNote = (value) => {
+  const AddNewNote = async (value) => {
+
     // Insert into db
     let query = `
     INSERT INTO notes ('order', tab)
     VALUES (${notes.length + 1}, ${tab});`;
-    sendAsync(query).then((result) => {
+    await sendAsync(query).then((result) => {
       console.log("New Insert Result: " + JSON.stringify(result))
       if (!result) {
         alert("There was an issue creating new note.")
       } else {
-        // Retrieve new note
-        let retriveNewRowQuery = `SELECT max(*) FROM notes WHERE tab = ${tab};`;
-        sendAsync(retriveNewRowQuery).then((result) => {
-          if (!result) return;
-          console.log(JSON.stringify(result))
-          var newRowToAdd = {
-            id: result.id,
-            title: "default",
-            content: result.content
-          }
-          // Append to list
-          setNotes([notes, newRowToAdd])
-        });
+
       }
-      
     });
+
+     // Retrieve new note
+     let retriveNewRowQuery = `SELECT max(id) AS id FROM notes WHERE tab = ${tab};`;
+     await sendAsync(retriveNewRowQuery).then((result) => {
+       console.log("MAX: ")
+       console.log(JSON.stringify(result))
+       var newRowToAdd = {
+         id: result[0].id,
+         title: "",
+         content: ""
+       }
+       // Append to list
+       setNotes(notes => [...notes, newRowToAdd])
+     });
   }
 
   const DeleteNote = (value) =>  {
@@ -91,14 +92,14 @@ const Home = () => {
 
 
   const SaveNote = (id, title, content) => {
-    console.log("Saving note: " + id, title, content)
+    console.log("Saving note: " + id)
     //setSaveIconColour("orange")
     setSaveIcon("cloud-upload-alt")
     let query = 
     `UPDATE notes
     SET title = '${title}', 
     content = '${content}'
-    WHERE id = ${focussedNoteId};`;
+    WHERE id = ${id};`;
     
     console.log(query)
 
@@ -106,7 +107,7 @@ const Home = () => {
       if (!result) {
         alert("There was an issue saving!")
       } else { 
-        console.log(result)
+        console.log("Saved: " + result)
       }
     });
   // var delayInMilliseconds = 1000; //1 second

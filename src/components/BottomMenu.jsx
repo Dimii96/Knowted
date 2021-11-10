@@ -8,6 +8,10 @@ import { faBorderNone } from '@fortawesome/free-solid-svg-icons';
 
 const BottomMenu = ({ id, disabled, addNewNote, deleteNote, saveNote }) => {
 
+  const handleDelete = () => {
+    deleteNote(id)
+  }
+
   return (
 
     <div id="bm-container" className={"row px-3"}>
@@ -33,8 +37,7 @@ const BottomMenu = ({ id, disabled, addNewNote, deleteNote, saveNote }) => {
         </div>
 
         <div className={"btn btn-outline-dark btn-sm bm-item " + disabled}
-          onClick={deleteNote} >
-
+          onClick={handleDelete} >
           <FontAwesomeIcon icon="trash" />
         </div>
 
