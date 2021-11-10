@@ -5,8 +5,9 @@ const options = {
 }
 //encryptionKey: "aes-256-cbc"
 
-const Store = require('electron-store');
-const store = new Store(options);
+const database = new sqlite3.Database('./src/db.sqlite3', sqlite3.OPEN_READWRITE, (err) => {
+    if (err) console.error('Database opening error: ', err);
+});
 
 // const database = new sqlite3.Database('./public/db.sqlite3', sqlite3.OPEN_READWRITE, (err) => {
 //     if (err) console.error('Database opening error: ', err);
@@ -41,39 +42,3 @@ ipcMain.on('store-get', (event, arg) => {
         event.reply('get-reply', newNote);
     }
 });
-
-ipcMain.on('store-set', (event, name, data) => {
-    try {
-        store.set(name, data)
-        event.reply('store-reply', true);
-    } catch (error) {
-        console.log("store-set err: \n" + error)
-        event.reply('store-reply', null);
-    }
-});
-
-
-ipcMain.on('store-delete', async (event, id) => {
-    try {
-        console.log("Deleting: " + id)
-        var result = await store.delete("notes")
-        event.reply('store-reply', result);
-    } catch (error) {
-        console.log("store-delete err: \n" + error)
-        event.reply('store-reply', null);
-    }
-});
-
-ipcMain.on('store-count', (event) => {
-    try {
-        let count = store.count()
-        event.reply('store-reply', count);
-    } catch (error) {
-        console.log("store-count err: \n" + error)
-        event.reply('store-reply', null);
-    }
-});
-
-
-
-

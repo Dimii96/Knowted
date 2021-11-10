@@ -9,27 +9,21 @@ import { FontAwesomeIcon } from '@fortawesome/react-fontawesome'
 // import { faBorderNone } from '@fortawesome/free-solid-svg-icons';
 
 
-const BottomMenu = ({ id, disabled, noteHasFocus, AddNewNote, deleteNote, saveNote }) => {
-  // disabled = (noteHasFocus) ? false : true;
+const BottomMenu = ({ id, disabled, addNewNote, deleteNote, saveNote }) => {
 
-  const DeleteNote = () => {
-    deleteNote()
+  const handleDelete = () => {
+    deleteNote(id)
   }
 
   return (
 
-    <div id="bm-container" className={"row px-2"}>
+    <div id="bm-container" className={"row px-3"}>
 
         <div id="bm-main" className="">
 
-          <button type="button"
-           className={"btn btn-outline-dark btn-sm bm-item"}
-            // onClick={saveNote}
-            onClick={() => alert("Manual save currently disabled")}
-            readonly
-            title="Save (currently disabled)" >
-            <FontAwesomeIcon icon="save" />
-          </button>
+        <div className="bm-item">
+          {id}
+        </div>
 
           {/* <button type="button" className={"btn btn-outline-dark btn-sm bm-item"}
             onClick={AddNewNote}
@@ -37,10 +31,10 @@ const BottomMenu = ({ id, disabled, noteHasFocus, AddNewNote, deleteNote, saveNo
             <FontAwesomeIcon icon="plus-circle" />
           </button> */}
 
-          {/* <button type="button" className={"btn btn-outline-dark btn-sm bm-item"}
-            disabled={disabled} >
-            <FontAwesomeIcon icon="chevron-up" />
-          </button>
+        <div className={"btn btn-outline-dark btn-sm bm-item " + disabled}
+          onClick={() => addNewNote(id)} >
+          <FontAwesomeIcon icon="plus-circle" />
+        </div>
 
           <button type="button" className={"btn btn-outline-dark btn-sm bm-item"}
             disabled={disabled} >
@@ -56,6 +50,9 @@ const BottomMenu = ({ id, disabled, noteHasFocus, AddNewNote, deleteNote, saveNo
             <FontAwesomeIcon icon="trash" />
           </button>
 
+        <div className={"btn btn-outline-dark btn-sm bm-item " + disabled}
+          onClick={handleDelete} >
+          <FontAwesomeIcon icon="trash" />
         </div>
 
       <div id="bm-toggle" className="">

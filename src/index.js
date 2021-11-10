@@ -16,6 +16,9 @@ import About from "./pages/About"
 import Settings from "./pages/Settings"
 import App from "./pages/z_App"
 
+// Components
+import Footer from './components/Footer'
+
 
 // Font Awesome Icons
 import { library } from '@fortawesome/fontawesome-svg-core'
@@ -43,6 +46,7 @@ ReactDOM.render(
                     <button className="navbar-toggler" type="button" data-target="#navbarNav" aria-controls="navbarNav" aria-expanded="false" aria-label="Toggle navigation">
                         <span className="navbar-toggler-icon" />
                     </button>
+
                     <div className="collapse navbar-collapse  justify-content-end" id="navbarNav">
                         <ul className="navbar-nav white">
 
@@ -52,27 +56,21 @@ ReactDOM.render(
                             <li className="nav-item">
                                 <Link className="nav-link" to="/settings"><FontAwesomeIcon icon="cog" /></Link>
                             </li>
+                            <li className="nav-item">
+                                <Link className="nav-link" to="/app"><FontAwesomeIcon icon="circle" /></Link>
+                            </li>
                         </ul>
                     </div>
                 </div>
             </nav>
-            <body>
-                {/* <Switch>
-          <Route path="/about">
-            <About />
-          </Route>
-          <Route path="/">
-            <Home />
-          </Route>
-        </Switch> */}
-                <Route exact path="/" component={Home} />
-                <Route path="/app" component={App} />
-                <Route path="/about" component={About} />
-                <Route path="/Settings" component={Settings} />
-                {/* <div id="save-bar"></div> */}
-
-            </body>
         </main>
+        <body>
+            <Route exact path="/" component={Home} />
+            <Route path="/app" component={App} />
+            <Route path="/about" component={About} />
+            <Route path="/Settings" component={Settings} />
+            {/* <Footer /> */}
+        </body>
     </Router>,
 
     // <React.StrictMode>

@@ -7,12 +7,12 @@ import { FontAwesomeIcon } from '@fortawesome/react-fontawesome'
 // https://medium.com/cameron-nokes/how-to-store-user-data-in-electron-3ba6bf66bc1e
 
 
-const Section = ({ id, title, content, sendNoteIDToParent, showBottomMenu, saveNote  }) => {
+const Section = ({ id, title, content, sendNoteIDToParent, showBottomMenu, saveNote }) => {
   const [contentState, setContentState] = useState(content);
   const [titleState, setTitleState] = useState(title);
 
   // const handleKeyDown = (event) => {
-    
+
   //   event.preventDefault();
   //   let charCode = String.fromCharCode(event.which).toLowerCase();
   //   console.log("Char", charCode)
@@ -31,10 +31,7 @@ const Section = ({ id, title, content, sendNoteIDToParent, showBottomMenu, saveN
     sendNoteIDToParent(id);
   }
 
-  
-  const SaveNote = (event) => {
-    event.preventDefault();
-    console.log(id, titleState, contentState)
+  const SaveNote = () => {
     saveNote(id, titleState, contentState);
     showBottomMenu(false)
     // sendNoteIDToParent(null);
@@ -48,16 +45,16 @@ const Section = ({ id, title, content, sendNoteIDToParent, showBottomMenu, saveN
         </div>
       </div> */}
 
-
       <div className="section-content">
         <div className="section-main p-0">
-          <input 
+          <input
             type="text"
             className="note-title"
-            value={titleState} 
-            placeholder="Note title (optional)"
+            value={titleState}
+            onBlur={SaveNote}
+            onFocus={handleFocus}
             onChange={e => setTitleState(e.target.value)}
-            />
+          />
           <textarea
             className="note-content"
             value={contentState ? contentState : ""}
@@ -65,7 +62,7 @@ const Section = ({ id, title, content, sendNoteIDToParent, showBottomMenu, saveN
             onFocus={handleFocus}
             //onBlur={SaveNote}
             onChange={e => setContentState(e.target.value)}
-            //onChange={({ target: { value } }) => { setResponse(value)} }
+          //onChange={({ target: { value } }) => { setResponse(value)} }
           />
         </div>
 
@@ -88,7 +85,7 @@ Section.propTypes = {
 }
 
 Section.defaultProps = {
-  title: "Task Tracker"
+  title: "Task Tracker Default"
 }
 
 export default Section;
