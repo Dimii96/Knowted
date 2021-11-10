@@ -6,6 +6,7 @@ import sendAsync from '../message-control/renderer';
 import Note from '../components/Note'
 import BottomMenu from '../components/BottomMenu'
 
+
 //function App() {
 const App = () => {
 
@@ -17,7 +18,7 @@ const App = () => {
     const [bottomMenuVisible, setBottomMenuVisible] = useState("false")
     const [focussedNoteId, setFocussedNoteId] = useState(null)
     const [saveIcon, setSaveIcon] = useState("cloud")
-
+    const [lastId, setLastId] = useState(null)
 
 
     useEffect(() => {
@@ -27,21 +28,25 @@ const App = () => {
         //eslint-disable-next-line react-hooks/exhaustive-deps
     }, []);
 
-    function send(sql) {
-        sendAsync(sql).then((result) => {
-            console.log(result[0])
-            setNotes([]);
+    async function send(sql) {
+        let tmp = [];
+        console.log("Query: " + sql)
+        // await sendAsync(sql).then((result) => {
+        //     console.log("Result: " + JSON.stringify(result[0]))
+        //     setNotes(result)
+        // });
+        var result = await sendAsync(sql);
+        console.log("Result: " + JSON.stringify(result))
+        if (result && result.length > 0) {
             setNotes(result)
-        });
+        }
     }
 
     const AddNewNote = (value) => {
-        // Insert into db
-
         try {
-
             let query =
-                `INSERT INTO notes ('order', tab) VALUES (${notes.length + 1}, ${tab});`;
+                `INSERT INTO notes (notes, 'order', tab) VALUES ('', ${notes.length + 1}, ${tab});`;
+            alert(query)
             setResponse(query)
 
             sendAsync(query).then((result) => {
@@ -52,7 +57,6 @@ const App = () => {
                     alert(result)
                 }
             });
-
 
             // Retrieve new note
             let retriveNewRowQuery = `SELECT max(*) FROM notes WHERE tab = ${tab};`;
@@ -74,21 +78,26 @@ const App = () => {
         }
     }
 
-    const DeleteNote = (value) => {
-        //alert(value)
-        const newNotesList = notes.filter((item) => item.id !== focussedNoteId);
-        setFocussedNoteId(19);
-        setNotes(newNotesList)
+    const DeleteNote = async (id) => {
+        //async function DeleteNote(id) { 
+        try {
+            // console.log("Deleting: " + id)
+            // const newNotesList = notes.filter((item) => item.id !== focussedNoteId);
+            // setFocussedNoteId(19);
+            // setNotes(newNotesList)
 
-        var deleteQuery = "";
-        sendAsync("").then((result) => {
+            var deleteQuery = `DELETE FROM notes WHERE id = ${id}`;
+            console.log(deleteQuery)
+            await sendAsync(deleteQuery).then((result) => {
+                console.log(JSON.stringify(result))
+            });
+            //let result = await sendAsync(deleteQuery);
+            //console.log(JSON.stringify(result))
 
-        })
+        } catch (error) {
+            alert(error)
+        }
     };
-
-
-
-
 
     const sendNoteIDToParent = (index) => {
         setFocussedNoteId(index);
@@ -110,7 +119,7 @@ const App = () => {
             WHERE id = ${focussedNoteId};`;
 
         console.log(query)
-        
+
         await send(query)
         // sendAsync(query).then((result) => {
         //     if (!result) {
@@ -136,9 +145,6 @@ const App = () => {
                 </h1>
             </header>
             <article>
-                <p>
-                    Say <i>ping</i> to the main process.
-                </p>
                 {/* <input
                     type="text"
                     className="form-control"
