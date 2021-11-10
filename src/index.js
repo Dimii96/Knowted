@@ -40,7 +40,7 @@ library.add(faCoffee, faPlus, faExclamationCircle, faCircle, faSave,
 ReactDOM.render(
     <Router>
         <main>
-            <nav className="navbar navbar-expand navbar-dark bg-dark" hidden>
+            <nav className="navbar navbar-expand navbar-dark bg-dark">
                 <div className="container-fluid">
                     <a className="navbar-brand px-1" href="/" style={{ border: '1px solid white', borderRadius: '5px' }}>Knowted<span className="title-beta">beta</span></a>
                     <button className="navbar-toggler" type="button" data-target="#navbarNav" aria-controls="navbarNav" aria-expanded="false" aria-label="Toggle navigation">
