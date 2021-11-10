@@ -10,14 +10,17 @@ import { FontAwesomeIcon } from '@fortawesome/react-fontawesome'
 const Section = ({ id, title, content, sendNoteIDToParent, showBottomMenu, saveNote }) => {
   const [contentState, setContentState] = useState(content);
   const [titleState, setTitleState] = useState(title);
+  // const [saveIcon, setSaveIcon] = useState("cloud")
+  // const [saveIconColour] = useState("aqua")
 
   // const handleKeyDown = (event) => {
 
   //   event.preventDefault();
+  //   saveNote(response);
   //   let charCode = String.fromCharCode(event.which).toLowerCase();
   //   console.log("Char", charCode)
   //   if ((event.ctrlKey || event.metaKey) && charCode === 's') {
-  //     saveNote(id, titleState, contentState);
+  //     saveNote("sdf");
   //   } else if ((event.ctrlKey || event.metaKey) && charCode === 'c') {
   //     alert("CTRL+C Pressed");
   //   } else if ((event.ctrlKey || event.metaKey) && charCode === 'v') {
@@ -25,20 +28,19 @@ const Section = ({ id, title, content, sendNoteIDToParent, showBottomMenu, saveN
   //   }
   // }
 
-  const handleFocus = (event) => {
-    event.preventDefault();
+  const handleFocus = () => {
     showBottomMenu(true)
     sendNoteIDToParent(id);
   }
 
   const SaveNote = () => {
     saveNote(id, titleState, contentState);
-    showBottomMenu(false)
+    // showBottomMenu(false)
     // sendNoteIDToParent(null);
   }
 
   return (
-    <div className="section" onBlur={SaveNote}>
+    <div className="section">
       {/* <div className="section-header">
         <div className="section-title px-2">
           {id}
@@ -60,7 +62,8 @@ const Section = ({ id, title, content, sendNoteIDToParent, showBottomMenu, saveN
             value={contentState ? contentState : ""}
             // onKeyUp={handleKeyDown}
             onFocus={handleFocus}
-            //onBlur={SaveNote}
+            onBlur={SaveNote}
+            //onChange={e => blah(e.target.value)}
             onChange={e => setContentState(e.target.value)}
           //onChange={({ target: { value } }) => { setResponse(value)} }
           />

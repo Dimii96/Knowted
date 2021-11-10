@@ -15,24 +15,24 @@ const Home = () => {
   const [focussedNoteId, setFocussedNoteId] = useState(null)
   const [noteHasFocus, setNoteHasFocus] = useState(false)
 
-    const [saveIcon, setSaveIcon] = useState("cloud")
-    const [saveIconColour] = useState("aqua")
-    
-    useEffect(() => {
-      LoadTab();
-      //eslint-disable-next-line react-hooks/exhaustive-deps
-    }, []);
-      
-    //logger.trace("Entering cheese testing");
-    // Init load of notes
-    async function LoadTab() {
-      let query = `SELECT * FROM notes WHERE tab = ${tab} ORDER BY [order] ASC`;
-      await sendAsync(query).then((result) => {
-        if (result) setNotes(result)
-        //console.log(result)
+  const [saveIcon, setSaveIcon] = useState("cloud")
+  const [saveIconColour] = useState("aqua")
+
+  useEffect(() => {
+    LoadTab();
+    //eslint-disable-next-line react-hooks/exhaustive-deps
+  }, []);
+
+  //logger.trace("Entering cheese testing");
+  // Init load of notes
+  async function LoadTab() {
+    let query = `SELECT * FROM notes WHERE tab = ${tab} ORDER BY [order] ASC`;
+    await sendAsync(query).then((result) => {
+      if (result) setNotes(result)
+      //console.log(result)
     });
   }
-  
+
   const AddNewNote = async (value) => {
 
     // Insert into db
@@ -40,67 +40,44 @@ const Home = () => {
     INSERT INTO notes ('order', tab)
     VALUES (${notes.length + 1}, ${tab});`;
     await sendAsync(query).then((result) => {
-      //console.log("New Insert Result: " + JSON.stringify(result))
+      console.log("New Insert Result: " + JSON.stringify(result))
       if (!result) {
         alert("There was an issue creating new note.")
+      } else {
+
       }
     });
 
-     // Retrieve new note
-     let retriveNewRowQuery = `SELECT max(id) AS id FROM notes WHERE tab = ${tab};`;
-     await sendAsync(retriveNewRowQuery).then((result) => {
-       console.log("MAX: ")
-       console.log(JSON.stringify(result))
-       var newRowToAdd = {
-         id: result[0].id,
-         title: "",
-         content: ""
-       }
-       // Append to list
-       setNotes(notes => [...notes, newRowToAdd])
-     });
+    // Retrieve new note
+    let retriveNewRowQuery = `SELECT max(id) AS id FROM notes WHERE tab = ${tab};`;
+    await sendAsync(retriveNewRowQuery).then((result) => {
+      console.log("MAX: ")
+      console.log(JSON.stringify(result))
+      var newRowToAdd = {
+        id: result[0].id,
+        title: "",
+        content: ""
+      }
+      // Append to list
+      setNotes(notes => [...notes, newRowToAdd])
+    });
   }
 
-  // const AddNewNote = async () => {
-  //   let notesList = await storeGet("notes");
-  //   console.log(notesList)
-  //   var newNote = {
-  //     id: Math.floor(Math.random() * 2147483647),
-  //     title: "",
-  //     content: "",
-  //     order: 1,
-  //     tab: 1
-  //   }
-  //   notesList.push(newNote)
+  const DeleteNote = (value) => {
 
-  //   let result = await storeSet("notes", notesList)
-  //   //console.log("Saved note: " + result);
-  //   if (result) {
-  //     setNotes(notes => notes.concat(newNote))
-  //     //setNotes(notes, [newNote])
-  //   }
-  // }
-
-  const DeleteNote = async (event) => {
-    event.preventDefault();
-    try {
-
-      if (focussedNoteId == null) {
-        alert("No note is selected to delete!")
-        return;
+    if (focussedNoteId == null) alert("No note is selected to delete!")
+    let query = `DELETE FROM notes WHERE id = '${focussedNoteId}';`;
+    //if(confirm("Delete note?")) {
+    sendAsync(query).then((result) => {
+      if (!result) {
+        alert("There was an issue deleting!")
+      } else {
+        const newNotesList = notes.filter((item) => item.id !== focussedNoteId);
+        setNotes(newNotesList)
+        console.log("Notes: " + focussedNoteId + " has been deleted.")
       }
-
-      var notesList = await storeGet("notes");
-      var removeIndex = notesList.map(function (item) { return item.id; }).indexOf(focussedNoteId);
-      notesList.splice(removeIndex, 1);
-      storeSet("notes", notesList)
-      setNotes(notesList)
-
-    } catch (error) {
-      console.log("Could not delete " + focussedNoteId + "\n --" + error)
-    }
-
-
+    });
+    //}
   }
 
   const sendNoteIDToParent = (index) => {
@@ -113,7 +90,7 @@ const Home = () => {
 
 
   const SaveNote = (id, title, content) => {
-    //console.log("Saving note: " + id)
+    console.log("Saving note: " + id)
     //setSaveIconColour("orange")
     setSaveIcon("cloud-upload-alt")
     let query = 
@@ -122,13 +99,13 @@ const Home = () => {
     content = '${content}'
     WHERE id = ${id};`;
     
-    //console.log(query)
+    console.log(query)
 
     sendAsync(query).then((result) => {
       if (!result) {
         alert("There was an issue saving!")
       } else { 
-        //console.log("Saved: " + result)
+        console.log("Saved: " + result)
       }
     });
   // var delayInMilliseconds = 1000; //1 second
@@ -142,15 +119,9 @@ const Home = () => {
 
   return (
     <div id="Home" className="container-fluid mt-2">
-      <p>Test: {test}</p>
 
       {/* <Header title={test} /> */}
-      {/* <div className="row m-1">
-          <div className="col-12 text-center">
-      <NewNoteButton id={null} className="m-1 text-center" />
-
-      </div>
-    </div>   */}
+  
       <div id="notes">
         {notes.map(r =>
           <Note key={r.id}
@@ -174,7 +145,7 @@ const Home = () => {
 
 
     </div>
-  ); 
+  );
 
 }
 
