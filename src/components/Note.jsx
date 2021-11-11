@@ -4,8 +4,6 @@ import PropTypes from 'prop-types'
 import sendAsync from '../message-control/renderer'
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome'
 
-// https://medium.com/cameron-nokes/how-to-store-user-data-in-electron-3ba6bf66bc1e
-
 
 const Section = ({ id, title, content, sendNoteIDToParent, showBottomMenu, saveNote }) => {
   const [contentState, setContentState] = useState(content);

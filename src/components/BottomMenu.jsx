@@ -13,22 +13,20 @@ const BottomMenu = ({ id, disabled, addNewNote, deleteNote, saveNote }) => {
   }
 
   return (
-
     <div id="bm-container" className={"row px-3"}>
-
       <div id="bm-main" className="">
 
         <div className="bm-item">
           {id}
         </div>
 
-        <div className={"btn btn-outline-dark btn-sm bm-item"}
+        {/* <div className={"btn btn-outline-dark btn-sm bm-item"}
           onClick={() => saveNote(id)} >
           <FontAwesomeIcon icon="save" />
-        </div>
+        </div> */}
 
         <div className={"btn btn-outline-dark btn-sm bm-item " + disabled}
-          onClick={() => addNewNote(id)} >
+          onClick={addNewNote} >
           <FontAwesomeIcon icon="plus-circle" />
         </div>
 
