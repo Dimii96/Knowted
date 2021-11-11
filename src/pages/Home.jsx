@@ -65,19 +65,25 @@ const Home = () => {
 
   const DeleteNote = (value) => {
 
-    if (focussedNoteId == null) alert("No note is selected to delete!")
+    if (focussedNoteId == null) {
+      alert("No note is selected to delete!")
+      return;
+    }
+
     let query = `DELETE FROM notes WHERE id = '${focussedNoteId}';`;
-    //if(confirm("Delete note?")) {
-    sendAsync(query).then((result) => {
-      if (!result) {
-        alert("There was an issue deleting!")
-      } else {
-        const newNotesList = notes.filter((item) => item.id !== focussedNoteId);
-        setNotes(newNotesList)
-        console.log("Notes: " + focussedNoteId + " has been deleted.")
-      }
-    });
-    //}
+    if(window.confirm("Delete note?")) {
+
+      sendAsync(query).then((result) => {
+        if (!result) {
+          alert("There was an issue deleting!")
+        } else {
+          const newNotesList = notes.filter((item) => item.id !== focussedNoteId);
+          setNotes(newNotesList)
+          console.log("Notes: " + focussedNoteId + " has been deleted.")
+        }
+      });
+    }
+
   }
 
   const sendNoteIDToParent = (index) => {
@@ -93,27 +99,25 @@ const Home = () => {
     console.log("Saving note: " + id)
     //setSaveIconColour("orange")
     setSaveIcon("cloud-upload-alt")
-    let query = 
-    `UPDATE notes
+    let query =
+      `UPDATE notes
     SET title = '${title}', 
     content = '${content}'
     WHERE id = ${id};`;
-    
-    console.log(query)
 
     sendAsync(query).then((result) => {
       if (!result) {
         alert("There was an issue saving!")
-      } else { 
-        console.log("Saved: " + result)
+      } else {
+        console.log("Saved: " + id)
       }
     });
-  // var delayInMilliseconds = 1000; //1 second
-  // setTimeout(function () {
-  //   //your code to be executed after 1 second
-  //   setSaveIcon("cloud")
-  //   //setSaveIconColour("aqua")
-  // }, delayInMilliseconds);
+    // var delayInMilliseconds = 1000; //1 second
+    // setTimeout(function () {
+    //   //your code to be executed after 1 second
+    //   setSaveIcon("cloud")
+    //   //setSaveIconColour("aqua")
+    // }, delayInMilliseconds);
   }
 
 
@@ -121,12 +125,12 @@ const Home = () => {
     <div id="Home" className="container-fluid mt-2">
 
       {/* <Header title={test} /> */}
-  
+
       <div id="notes">
         {notes.map(r =>
           <Note key={r.id}
             id={r.id}
-            title={r.id + " - " + r.title}
+            title={r.title}
             content={r.content}
             sendNoteIDToParent={sendNoteIDToParent}
             showBottomMenu={showBottomMenu}
@@ -138,7 +142,7 @@ const Home = () => {
         id={focussedNoteId}
         noteHasFocus={noteHasFocus}
         disabled={false}
-        AddNewNote={AddNewNote}
+        addNewNote={AddNewNote}
         deleteNote={DeleteNote}
         saveNote={SaveNote} />
 
