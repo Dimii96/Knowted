@@ -26,6 +26,7 @@ const Home = () => {
   //logger.trace("Entering cheese testing");
   // Init load of notes
   async function LoadTab() {
+
     let query = `SELECT * FROM notes WHERE tab = ${tab} ORDER BY [order] ASC`;
     await sendAsync(query).then((result) => {
       if (result) setNotes(result)
@@ -71,7 +72,7 @@ const Home = () => {
     }
 
     let query = `DELETE FROM notes WHERE id = '${focussedNoteId}';`;
-    if(window.confirm("Delete note?")) {
+    if (window.confirm("Delete note?")) {
 
       sendAsync(query).then((result) => {
         if (!result) {
@@ -126,18 +127,25 @@ const Home = () => {
 
       {/* <Header title={test} /> */}
 
-      <div id="notes">
-        {notes.map(r =>
-          <Note key={r.id}
-            id={r.id}
-            title={r.title}
-            content={r.content}
-            sendNoteIDToParent={sendNoteIDToParent}
-            showBottomMenu={showBottomMenu}
-            saveNote={SaveNote} />
-        )}
-      </div>
-
+      {notes.length > 0 ?
+        <div id="notes">
+          {notes.map(r =>
+            <Note key={r.id}
+              id={r.id}
+              title={r.title}
+              content={r.content}
+              sendNoteIDToParent={sendNoteIDToParent}
+              showBottomMenu={showBottomMenu}
+              saveNote={SaveNote} />
+          )}
+        </div>
+        :
+        <div className="row">
+          <div className="col-12 br-grey white text-center mt-5 p-3">
+            Click the Plus button in the toolbar at the bottom to create a new note.
+          </div>
+          </div>
+      }
       <BottomMenu
         id={focussedNoteId}
         noteHasFocus={noteHasFocus}
