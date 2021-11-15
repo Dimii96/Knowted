@@ -57,7 +57,7 @@ function Settings() {
       <div className="section">
         <div className="section-content">
           <div className="section-title subheading px-2">
-            <label>Tips and Help</label>
+            <label>Customise your notes editor options</label>
           </div>
           <div className="section-main">
 
