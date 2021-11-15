@@ -52,10 +52,33 @@ const Section = ({ id, title, content, sendNoteIDToParent, showBottomMenu, saveN
             className="note-title"
             value={titleState}
             onBlur={SaveNote}
-            onFocus={handleFocus}
-            onChange={e => setTitleState(e.target.value)}
-          />
-          <textarea
+          >{content}</div> */}
+
+
+            <Editor
+              apiKey=""
+              onInit={(evt, editor) => editorRef.current = editor}
+              initialValue={contentState}
+              init={{
+                height: 500,
+                menubar: false,
+                plugins: [
+                  ' autoresize advlist autolink lists link image charmap print preview anchor',
+                  'searchreplace visualblocks code fullscreen',
+                  'insertdatetime media table paste code help wordcount'
+                ],
+                toolbar: toolbarVisibile,
+                toolbar_location: 'bottom',
+                content_style: 'body { font-family:Helvetica,Arial,sans-serif; font-size:14px }',
+                autoresize_bottom_margin: 0
+              }}
+              // onKeyUp={e => setContentState(e.target.innerText)}
+              onFocus={handleFocus}
+              // onBlur={SaveNote}
+              onBlur={SaveNote}
+            />
+          </div>
+          {/* <textarea
             className="note-content"
             value={contentState ? contentState : ""}
             // onKeyUp={handleKeyDown}
