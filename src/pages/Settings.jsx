@@ -1,7 +1,42 @@
-import React from 'react';
+import React, { useState, useEffect /*, Component */ } from 'react';
 import { Link } from "react-router-dom"
+import sendAsync from '../message-control/renderer'
 
 function Settings() {
+
+  const [tinyMCESettings, setTinyMCESettings] = useState([]);
+
+
+  useEffect(() => {
+    LoadSettings();
+    //eslint-disable-next-line react-hooks/exhaustive-deps
+  }, []);
+
+  // Init load of settings
+  async function LoadSettings() {
+
+    // Retrieve Tiny.MCE settings
+    let query = `SELECT * FROM tinymce_options WHERE type = 'toolbar'`;
+    await sendAsync(query).then((result) => {
+      if (result) setTinyMCESettings(result)
+    });
+  }
+
+
+  async function UpdateSetting(id, checked) {
+    try {
+      console.log(id, checked)
+      let query = `UPDATE tinymce_options SET enabled = ${1} WHERE id = ${1}`;
+      let result = await sendAsync(query)
+      console.log(result)
+    } catch (error) {
+      console.log("Failed to save setting. Please retry later.")
+      console.log(error)
+    }
+
+  }
+
+
   return (
     <div className="container">
       <div id="page-title">Settings</div>
@@ -17,6 +52,30 @@ function Settings() {
           </div>
         </div>
       </div>
+
+
+      <div className="section">
+        <div className="section-content">
+          <div className="section-title subheading px-2">
+            <label>Tips and Help</label>
+          </div>
+          <div className="section-main">
+
+            <form>
+              {tinyMCESettings.map(s =>
+                <div key={s.id} className="form-check">
+                  <input id={"tinymce-option-" + s.id} className="form-check-input" type="checkbox" defaultChecked={s.enabled} onClick={(e) => UpdateSetting(s.id, e.target.checked)}></input>
+                  <label className="form-check-label" htmlFor="flexCheckDefault"> {s.option} </label>
+                </div>
+
+              )}
+            </form>
+
+
+          </div>
+        </div>
+      </div>
+
 
       <div className="section" hidden>
         <div className="section-content">
@@ -41,27 +100,40 @@ function Settings() {
               </div>
               <div className="col-12 col-sm-8 col-md-8 col-lg-6">
                 <div className="form-check">
-                  <input className="form-check-input" type="radio" name="exampleRadios" id="exampleRadios1" value="option1" defaultChecked/>
-                  <label className ="form-check-label" htmlFor="exampleRadios1">
-                  Light
+                  <input className="form-check-input" type="radio" name="exampleRadios" id="exampleRadios1" value="option1" defaultChecked />
+                  <label className="form-check-label" htmlFor="exampleRadios1">
+                    Light
                   </label>
                 </div>
                 <div className="form-check">
-                  <input className="form-check-input" type="radio" name="exampleRadios" id="exampleRadios2" value="option2"/>
-                  <label className ="form-check-label" htmlFor="exampleRadios2">
-                  Dark
+                  <input className="form-check-input" type="radio" name="exampleRadios" id="exampleRadios2" value="option2" />
+                  <label className="form-check-label" htmlFor="exampleRadios2">
+                    Dark
                   </label>
                 </div>
                 <div className="form-check">
-                  <input className="form-check-input" type="radio" name="exampleRadios" id="exampleRadios3" value="option3" disabled/>
-                  <label className ="form-check-label" htmlFor="exampleRadios3">
-                  Other
+                  <input className="form-check-input" type="radio" name="exampleRadios" id="exampleRadios3" value="option3" disabled />
+                  <label className="form-check-label" htmlFor="exampleRadios3">
+                    Other
                   </label>
                 </div>
               </div>
-
             </div>
+          </div>
+        </div>
+      </div>
 
+
+      <div className="section">
+        <div className="section-content">
+          <div className="section-title subheading px-2">
+            <label>Tips and Help</label>
+          </div>
+          <div className="section-main">
+            <ul>
+              <li>Your notes and not headings will automatically save when you click out of the currently active notes box.</li>
+              <li>Stuff</li>
+            </ul>
           </div>
         </div>
       </div>
