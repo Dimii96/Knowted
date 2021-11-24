@@ -1,13 +1,19 @@
 // imports
-import React, { useState } from 'react';
+import React, { useState, useRef } from 'react';
 import PropTypes from 'prop-types'
 import sendAsync from '../message-control/renderer'
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome'
+import { Editor } from '@tinymce/tinymce-react';
 
 
 const Section = ({ id, title, content, sendNoteIDToParent, showBottomMenu, saveNote }) => {
   const [contentState, setContentState] = useState(content);
   const [titleState, setTitleState] = useState(title);
+  const [toolbar, setToolbar] = useState('undo redo | formatselect | ' +
+    'bold italic backcolor | alignleft aligncenter ' +
+    'alignright alignjustify | bullist numlist outdent indent | ' +
+    'removeformat | help');
+  const [enabledd, setEnabled] = useState(true)
   // const [saveIcon, setSaveIcon] = useState("cloud")
   // const [saveIconColour] = useState("aqua")
 
@@ -37,6 +43,14 @@ const Section = ({ id, title, content, sendNoteIDToParent, showBottomMenu, saveN
     // sendNoteIDToParent(null);
   }
 
+  const editorRef = useRef(null);
+  const log = () => {
+    if (editorRef.current) {
+      console.log(editorRef.current.getContent());
+    }
+  };
+
+
   return (
     <div className="section">
       {/* <div className="section-header">
@@ -47,44 +61,43 @@ const Section = ({ id, title, content, sendNoteIDToParent, showBottomMenu, saveN
 
       <div className="section-content">
         <div className="section-main p-0">
-          <input
+        <input
             type="text"
             className="note-title"
             value={titleState}
             onBlur={SaveNote}
-          >{content}</div> */}
+          />
 
-
-            <Editor
-              apiKey=""
-              onInit={(evt, editor) => editorRef.current = editor}
-              initialValue={contentState}
-              init={{
-                height: 500,
-                menubar: false,
-                plugins: [
-                  ' autoresize advlist autolink lists link image charmap print preview anchor',
-                  'searchreplace visualblocks code fullscreen',
-                  'insertdatetime media table paste code help wordcount'
-                ],
-                toolbar: toolbarVisibile,
-                toolbar_location: 'bottom',
-                content_style: 'body { font-family:Helvetica,Arial,sans-serif; font-size:14px }',
-                autoresize_bottom_margin: 0
-              }}
-              // onKeyUp={e => setContentState(e.target.innerText)}
-              onFocus={handleFocus}
-              // onBlur={SaveNote}
-              onBlur={SaveNote}
-            />
-          </div>
-          {/* <textarea
+          <Editor
+            apiKey=""
+            onInit={(evt, editor) => editorRef.current = editor}
+            initialValue={contentState}
+            init={{
+              height: 800,
+              menubar: false,
+              plugins: [
+                'autoresize advlist autolink lists link image charmap print preview anchor',
+                'searchreplace visualblocks code fullscreen',
+                'insertdatetime media table paste code help wordcount'
+              ],
+              toolbar: toolbar,
+              toolbar_location: 'bottom',
+              content_style: 'body { font-family:Helvetica,Arial,sans-serif; font-size:14px }',
+              autoresize_bottom_margin: 0,
+              branding: false,
+            }}
+            // onKeyUp={e => setContentState(e.target.innerText)}
+            onFocus={handleFocus}
+            onBlur={SaveNote}
+          />
+        </div>
+        {/* <textarea
             className="note-content"
-            value={contentState ? contentState : ""}
+            value={contentState ? contentState : ""}sf
             // onKeyUp={handleKeyDown}
             onFocus={handleFocus}
             onBlur={SaveNote}
-            //onChange={e => blah(e.target.value)}
+            //onChange={e => blah(e.target.value)}sadf
             onChange={e => setContentState(e.target.value)}
           //onChange={({ target: { value } }) => { setResponse(value)} }
           />
@@ -100,7 +113,7 @@ const Section = ({ id, title, content, sendNoteIDToParent, showBottomMenu, saveN
 
         </div> */}
       </div>
-    </div >
+    </div>
   );
 }
 

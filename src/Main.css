@@ -796,3 +796,10 @@ input:checked + .checkbox-label:after {
 .dropdown-item > .dropdown-icon {
   margin: 0 8px 0px -12px;
 }
+
+
+/* 
+.tox-editor-header:not(:focus), .tox-statusbar:not(:focus) {
+  /* display: none !important; *
+  background-color: blue;
+} */

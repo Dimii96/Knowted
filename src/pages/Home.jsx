@@ -10,7 +10,6 @@ import Note from '../components/Note'
 const Home = () => {
 
   const [notes, setNotes] = useState([]);
-  const [test, setTest] = useState(JSON.stringify(new Date));
   const [tab] = useState(1)
   const [focussedNoteId, setFocussedNoteId] = useState(null)
   const [noteHasFocus, setNoteHasFocus] = useState(false)
@@ -26,12 +25,18 @@ const Home = () => {
   //logger.trace("Entering cheese testing");
   // Init load of notes
   async function LoadTab() {
-
-    let query = `SELECT * FROM notes WHERE tab = ${tab} ORDER BY [order] ASC`;
-    await sendAsync(query).then((result) => {
-      if (result) setNotes(result)
-      //console.log(result)
-    });
+    try {
+      
+      let query = `SELECT * FROM notes WHERE tab = ${tab} ORDER BY [order] ASC`;
+      let result = await sendAsync(query);
+      console.log("Restul:")
+      console.log(result.length)
+      if(result.length > 0) {
+        setNotes(result)
+      } 
+    } catch (error) {
+      
+    }
   }
 
   const AddNewNote = async (value) => {
@@ -59,6 +64,7 @@ const Home = () => {
         title: "",
         content: ""
       }
+      console.log(newRowToAdd)
       // Append to list
       setNotes(notes => [...notes, newRowToAdd])
     });
