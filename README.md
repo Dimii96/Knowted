@@ -1,10 +1,9 @@
 # Knowted
 #### Note the things you want to know
 
-[![Build Status](https://travis-ci.org/dimii96/knowted.svg?branch=master)](https://travis-ci.org/dimii96/knowted)
-
 My take of a basic note editor for Windows and Mac.
-Still in a very early developemt stage and not very functional yet.
+This project is in early developement and is still in a WIP state.
+I do not recommend using this program as a note taker during this stage as you may lost any notes written.
 
 ## Features
 
@@ -13,7 +12,7 @@ Still in a very early developemt stage and not very functional yet.
   - Delete notes
 
 #### Future Features
-###### * These fure plans are not guarenteed.
+###### * These fure plans are not guaranteed.
   - WYSIWYG editing  
   - Cloud saving 
   - Tabs
