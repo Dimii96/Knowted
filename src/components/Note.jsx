@@ -6,7 +6,7 @@ import { FontAwesomeIcon } from '@fortawesome/react-fontawesome'
 import { Editor } from '@tinymce/tinymce-react';
 
 
-const Section = ({ id, title, content, sendNoteIDToParent, showBottomMenu, saveNote }) => {
+const Section = ({ id, title, content, sendNoteIDToParent, showBottomMenu, saveNote, editorOptions }) => {
   const [contentState, setContentState] = useState(content);
   const [titleState, setTitleState] = useState(title);
   const [toolbar, setToolbar] = useState('undo redo | formatselect | ' +
@@ -66,25 +66,32 @@ const Section = ({ id, title, content, sendNoteIDToParent, showBottomMenu, saveN
             className="note-title"
             value={titleState}
             onBlur={SaveNote}
+            hidden
           />
+          <div>{JSON.stringify(editorOptions)}</div>
 
           <Editor
-            apiKey=""
+            id={"note-" + id}
+            className="note"
+            apiKey="oskp6rm7cjwp39oz8g7hpalw870n128tgax61gh0sxnod2yy"
             onInit={(evt, editor) => editorRef.current = editor}
             initialValue={contentState}
             init={{
-              height: 800,
+              minheight: 200,
               menubar: false,
-              plugins: [
+              resize: false,
+              plugins: 
+              [ 
                 'autoresize advlist autolink lists link image charmap print preview anchor',
                 'searchreplace visualblocks code fullscreen',
                 'insertdatetime media table paste code help wordcount'
               ],
               toolbar: toolbar,
-              toolbar_location: 'bottom',
+              toolbar_location: 'right',
               content_style: 'body { font-family:Helvetica,Arial,sans-serif; font-size:14px }',
               autoresize_bottom_margin: 0,
               branding: false,
+              //inline: true,
             }}
             // onKeyUp={e => setContentState(e.target.innerText)}
             onFocus={handleFocus}

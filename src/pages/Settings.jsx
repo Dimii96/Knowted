@@ -17,21 +17,31 @@ function Settings() {
 
     // Retrieve Tiny.MCE settings
     let query = `SELECT * FROM tinymce_options WHERE type = 'toolbar'`;
-    await sendAsync(query).then((result) => {
-      if (result) setTinyMCESettings(result)
-    });
+    try {
+      let result = await sendAsync(query); 
+      setTinyMCESettings(result)
+    } catch (error) {
+      alert("There was an issue retriving Editor Options: \n" + error)
+    }
   }
 
 
   async function UpdateSetting(id, checked) {
+
     try {
-      console.log(id, checked)
-      let query = `UPDATE tinymce_options SET enabled = ${1} WHERE id = ${1}`;
+      let enabled = checked ? 1 : 0;
+      //console.log(id, checked)
+      let query = `UPDATE tinymce_options SET enabled = ${enabled} WHERE id = ${id}`;
+      console.log(query)
       let result = await sendAsync(query)
       console.log(result)
     } catch (error) {
       console.log("Failed to save setting. Please retry later.")
       console.log(error)
+    }
+    finally {
+      // Refresh settings
+      //LoadSettings()
     }
 
   }
@@ -65,9 +75,8 @@ function Settings() {
               {tinyMCESettings.map(s =>
                 <div key={s.id} className="form-check">
                   <input id={"tinymce-option-" + s.id} className="form-check-input" type="checkbox" defaultChecked={s.enabled} onClick={(e) => UpdateSetting(s.id, e.target.checked)}></input>
-                  <label className="form-check-label" htmlFor="flexCheckDefault"> {s.option} </label>
+                  <label className="form-check-label" htmlFor="flexCheckDefault"> {s.option} - {s.enabled} </label>
                 </div>
-
               )}
             </form>
 

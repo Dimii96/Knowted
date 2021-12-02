@@ -13,6 +13,7 @@ const Home = () => {
   const [tab] = useState(1)
   const [focussedNoteId, setFocussedNoteId] = useState(null)
   const [noteHasFocus, setNoteHasFocus] = useState(false)
+  const [editorOptions, setEditorOptions] = useState([])
 
   const [saveIcon, setSaveIcon] = useState("cloud")
   const [saveIconColour] = useState("aqua")
@@ -26,16 +27,26 @@ const Home = () => {
   // Init load of notes
   async function LoadTab() {
     try {
+
+      let getNotesquery = `SELECT * FROM notes WHERE tab = ${tab} ORDER BY [order] ASC`;
+      let notesResult = await sendAsync(getNotesquery);
+      if (notesResult.length > 0)
+        setNotes(notesResult)
       
-      let query = `SELECT * FROM notes WHERE tab = ${tab} ORDER BY [order] ASC`;
-      let result = await sendAsync(query);
-      console.log("Restul:")
-      console.log(result.length)
-      if(result.length > 0) {
-        setNotes(result)
-      } 
+
+      let getEditorOptionsQuery = `SELECT option from tinymce_options WHERE type = 'toolbar' AND enabled`;
+      let editorOptionsResults = await sendAsync(getEditorOptionsQuery)
+      //console.log(JSON.stringify(editorOptionsResults))
+      let tmpEditorOptionsString = "";
+      editorOptionsResults.forEach(o => {
+        tmpEditorOptionsString += o.option + " "
+      });
+      console.log(tmpEditorOptionsString)
+      if(editorOptionsResults.length > 0) 
+        setEditorOptions([tmpEditorOptionsString])
+      
     } catch (error) {
-      
+
     }
   }
 
@@ -136,13 +147,21 @@ const Home = () => {
       {notes.length > 0 ?
         <div id="notes">
           {notes.map(r =>
-            <Note key={r.id}
-              id={r.id}
-              title={r.title}
-              content={r.content}
-              sendNoteIDToParent={sendNoteIDToParent}
-              showBottomMenu={showBottomMenu}
-              saveNote={SaveNote} />
+            // <div className="row">
+              <Note key={r.id}
+                className="col-12"
+                id={r.id}
+                title={r.title}
+                content={r.content}
+                sendNoteIDToParent={sendNoteIDToParent}
+                showBottomMenu={showBottomMenu}
+                saveNote={SaveNote}
+                editorOptions={editorOptions} />
+              /* <div className="col-12 text-right">
+
+                <button className="btn btn-primary btn-sm rounded-circle">+</button>
+              </div>
+            </div> */
           )}
         </div>
         :
@@ -150,7 +169,7 @@ const Home = () => {
           <div className="col-12 br-grey white text-center mt-5 p-3">
             Click the Plus button in the toolbar at the bottom to create a new note.
           </div>
-          </div>
+        </div>
       }
       <BottomMenu
         id={focussedNoteId}
