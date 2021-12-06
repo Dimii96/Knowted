@@ -36,7 +36,6 @@ library.add(faCoffee, faPlus, faExclamationCircle, faCircle, faSave,
     faTrash, faSpinner, faCloud, faCloudUploadAlt, faCloudDownloadAlt, faPlusCircle,
     faGripVertical, faEllipsisH, faChevronRight, faChevronUp, faChevronDown, faWrench)
 
-
 ReactDOM.render(
     <Router>
         <main>
@@ -64,15 +63,12 @@ ReactDOM.render(
                 </div>
             </nav>
         </main>
-        <body>
-            <Route exact path="/" component={Home} />
-            <Route path="/app" component={App} />
-            <Route path="/about" component={About} />
-            <Route path="/Settings" component={Settings} />
-            {/* <Footer /> */}
-        </body>
+        <Route exact path="/" component={Home} />
+        <Route path="/app" component={App} />
+        <Route path="/about" component={About} />
+        <Route path="/Settings" component={Settings} />
+        {/* <Footer /> */}
     </Router>,
-
     // <React.StrictMode>
     //     <App />
     // </React.StrictMode>,
