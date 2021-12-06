@@ -1,19 +1,32 @@
 // imports
-import React, { useState, useRef } from 'react';
+import React, { useState, useRef, useEffect } from 'react';
 import PropTypes from 'prop-types'
 import sendAsync from '../message-control/renderer'
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome'
+
 import { Editor } from '@tinymce/tinymce-react';
 
+// import tinymce from "tinymce";
 
 const Section = ({ id, title, content, sendNoteIDToParent, showBottomMenu, saveNote, editorOptions }) => {
   const [contentState, setContentState] = useState(content);
   const [titleState, setTitleState] = useState(title);
-  const [toolbar, setToolbar] = useState('undo redo | formatselect | ' +
-    'bold italic backcolor | alignleft aligncenter ' +
-    'alignright alignjustify | bullist numlist outdent indent | ' +
-    'removeformat | help');
+  const [toolbar, setToolbar] = useState('');
   const [enabledd, setEnabled] = useState(true)
+
+
+  useEffect(() => {
+    if(editorOptions) {
+      setToolbar(editorOptions)
+    } else {
+      // Default to all
+      //setToolbar('undo redo | formatselect | ' +
+      // 'bold italic backcolor | alignleft aligncenter ' +
+      // 'alignright alignjustify | bullist numlist outdent indent | ' +
+      // 'removeformat | help')
+    }
+    
+  }, []);
   // const [saveIcon, setSaveIcon] = useState("cloud")
   // const [saveIconColour] = useState("aqua")
 
@@ -46,7 +59,7 @@ const Section = ({ id, title, content, sendNoteIDToParent, showBottomMenu, saveN
   const editorRef = useRef(null);
   const log = () => {
     if (editorRef.current) {
-      console.log(editorRef.current.getContent());
+      console.log("XZ: " + editorRef.current.getContent());
     }
   };
 
@@ -68,13 +81,14 @@ const Section = ({ id, title, content, sendNoteIDToParent, showBottomMenu, saveN
             onBlur={SaveNote}
             hidden
           />
-          <div>{JSON.stringify(editorOptions)}</div>
+          <div hidden>{JSON.stringify(editorOptions)}</div>
 
           <Editor
             id={"note-" + id}
             className="note"
+            //tinymceScriptSrc={process.env.PUBLIC_URL + '/js/tinymce/tinymce.min.js'}
             apiKey="oskp6rm7cjwp39oz8g7hpalw870n128tgax61gh0sxnod2yy"
-            onInit={(evt, editor) => editorRef.current = editor}
+            //onInit={(evt, editor) => editorRef.current = editor}
             initialValue={contentState}
             init={{
               minheight: 200,
@@ -82,9 +96,10 @@ const Section = ({ id, title, content, sendNoteIDToParent, showBottomMenu, saveN
               resize: false,
               plugins: 
               [ 
-                'autoresize advlist autolink lists link image charmap print preview anchor',
-                'searchreplace visualblocks code fullscreen',
-                'insertdatetime media table paste code help wordcount'
+                ' autoresize'
+                // 'autoresize advlist autolink lists link image charmap print preview anchor',
+                // 'searchreplace visualblocks code fullscreen',
+                // 'insertdatetime media table paste code help wordcount'
               ],
               toolbar: toolbar,
               toolbar_location: 'right',
@@ -92,8 +107,9 @@ const Section = ({ id, title, content, sendNoteIDToParent, showBottomMenu, saveN
               autoresize_bottom_margin: 0,
               branding: false,
               //inline: true,
+              count: false
             }}
-            // onKeyUp={e => setContentState(e.target.innerText)}
+            onKeyUp={e => setContentState(e.target.innerText)}
             onFocus={handleFocus}
             onBlur={SaveNote}
           />
