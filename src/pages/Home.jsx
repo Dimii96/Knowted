@@ -13,7 +13,7 @@ const Home = () => {
   const [tab] = useState(1)
   const [focussedNoteId, setFocussedNoteId] = useState(null)
   const [noteHasFocus, setNoteHasFocus] = useState(false)
-  const [editorOptions, setEditorOptions] = useState([])
+  const [editorOptions, setEditorOptions] = useState()
 
   const [saveIcon, setSaveIcon] = useState("cloud")
   const [saveIconColour] = useState("aqua")
@@ -27,26 +27,26 @@ const Home = () => {
   // Init load of notes
   async function LoadTab() {
     try {
+      console.log(new Date())
+
+      let getEditorOptionsQuery = `SELECT option from tinymce_options WHERE type = 'toolbar' AND enabled`;
+      let editorOptionsResults = await sendAsync(getEditorOptionsQuery)
+      //console.log(JSON.stringify(editorOptionsResults))
+      let tmpEditorOptionsString = '';
+      if (editorOptionsResults.length > 0) {
+        editorOptionsResults.forEach(o => {
+          tmpEditorOptionsString += o.option + ' '
+        });
+        setEditorOptions(tmpEditorOptionsString)
+      }
 
       let getNotesquery = `SELECT * FROM notes WHERE tab = ${tab} ORDER BY [order] ASC`;
       let notesResult = await sendAsync(getNotesquery);
       if (notesResult.length > 0)
         setNotes(notesResult)
-      
 
-      let getEditorOptionsQuery = `SELECT option from tinymce_options WHERE type = 'toolbar' AND enabled`;
-      let editorOptionsResults = await sendAsync(getEditorOptionsQuery)
-      //console.log(JSON.stringify(editorOptionsResults))
-      let tmpEditorOptionsString = "";
-      editorOptionsResults.forEach(o => {
-        tmpEditorOptionsString += o.option + " "
-      });
-      console.log(tmpEditorOptionsString)
-      if(editorOptionsResults.length > 0) 
-        setEditorOptions([tmpEditorOptionsString])
-      
     } catch (error) {
-
+      console.log("There was an error loading the tab.")
     }
   }
 
@@ -114,28 +114,32 @@ const Home = () => {
 
 
   const SaveNote = (id, title, content) => {
-    console.log("Saving note: " + id)
-    //setSaveIconColour("orange")
-    setSaveIcon("cloud-upload-alt")
-    let query =
-      `UPDATE notes
-    SET title = '${title}', 
-    content = '${content}'
-    WHERE id = ${id};`;
+    try {
+      console.log("Saving note: " + id)
+      //setSaveIconColour("orange")
+      setSaveIcon("cloud-upload-alt")
+      //title = '${title}', 
+      let query =
+        `UPDATE notes
+        SET content = '${content}'
+        WHERE id = ${id};`;
+      console.log(query)
+      sendAsync(query).then((result) => {
+        if (!result) {
+        } else {
+          console.log("Saved: " + id)
+        }
+      });
+      // var delayInMilliseconds = 1000; //1 second
+      // setTimeout(function () {
+      //   //your code to be executed after 1 second
+      //   setSaveIcon("cloud")
+      //   //setSaveIconColour("aqua")
+      // }, delayInMilliseconds);
+    } catch (error) {
+      alert("There was an issue saving!")
 
-    sendAsync(query).then((result) => {
-      if (!result) {
-        alert("There was an issue saving!")
-      } else {
-        console.log("Saved: " + id)
-      }
-    });
-    // var delayInMilliseconds = 1000; //1 second
-    // setTimeout(function () {
-    //   //your code to be executed after 1 second
-    //   setSaveIcon("cloud")
-    //   //setSaveIconColour("aqua")
-    // }, delayInMilliseconds);
+    }
   }
 
 
@@ -148,20 +152,20 @@ const Home = () => {
         <div id="notes">
           {notes.map(r =>
             // <div className="row">
-              <Note key={r.id}
-                className="col-12"
-                id={r.id}
-                title={r.title}
-                content={r.content}
-                sendNoteIDToParent={sendNoteIDToParent}
-                showBottomMenu={showBottomMenu}
-                saveNote={SaveNote}
-                editorOptions={editorOptions} />
-              /* <div className="col-12 text-right">
+            <Note key={r.id}
+              className="col-12"
+              id={r.id}
+              title={r.title}
+              content={r.content}
+              sendNoteIDToParent={sendNoteIDToParent}
+              showBottomMenu={showBottomMenu}
+              saveNote={SaveNote}
+              editorOptions={editorOptions} />
+            /* <div className="col-12 text-right">
 
-                <button className="btn btn-primary btn-sm rounded-circle">+</button>
-              </div>
-            </div> */
+              <button className="btn btn-primary btn-sm rounded-circle">+</button>
+            </div>
+          </div> */
           )}
         </div>
         :
