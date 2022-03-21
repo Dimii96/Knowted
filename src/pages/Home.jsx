@@ -13,9 +13,7 @@ const Home = () => {
   const [tab] = useState(1)
   const [focussedNoteId, setFocussedNoteId] = useState(null)
   const [noteHasFocus, setNoteHasFocus] = useState(false)
-  const [editorOptions, setEditorOptions] = useState([])
-  const [temp, setTemp] = useState();
-
+  const [editorOptions, setEditorOptions] = useState()
 
   const [saveIcon, setSaveIcon] = useState("cloud")
   const [saveIconColour] = useState("aqua")
@@ -29,6 +27,18 @@ const Home = () => {
   // Init load of notes
   async function LoadTab() {
     try {
+      console.log(new Date())
+
+      let getEditorOptionsQuery = `SELECT option from tinymce_options WHERE type = 'toolbar' AND enabled`;
+      let editorOptionsResults = await sendAsync(getEditorOptionsQuery)
+      //console.log(JSON.stringify(editorOptionsResults))
+      let tmpEditorOptionsString = '';
+      if (editorOptionsResults.length > 0) {
+        editorOptionsResults.forEach(o => {
+          tmpEditorOptionsString += o.option + ' '
+        });
+        setEditorOptions(tmpEditorOptionsString)
+      }
 
       let getNotesquery = `SELECT * FROM notes WHERE tab = ${tab} ORDER BY [order] ASC`;
       let notesResult = await sendAsync(getNotesquery);
@@ -49,7 +59,7 @@ const Home = () => {
         setEditorOptions([tmpEditorOptionsString])
 
     } catch (error) {
-
+      console.log("There was an error loading the tab.")
     }
   }
 
