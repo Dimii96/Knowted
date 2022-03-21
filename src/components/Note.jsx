@@ -6,7 +6,7 @@ import { FontAwesomeIcon } from '@fortawesome/react-fontawesome'
 import { Editor } from '@tinymce/tinymce-react';
 
 
-const Section = ({ id, title, content, sendNoteIDToParent, showBottomMenu, saveNote, editorOptions }) => {
+const Note = ({ id, title, content, sendNoteIDToParent, showBottomMenu, saveNote, editorOptions }) => {
   const [contentState, setContentState] = useState(content);
   const [titleState, setTitleState] = useState(title);
   const [toolbar, setToolbar] = useState('undo redo | formatselect | ' +
@@ -37,8 +37,10 @@ const Section = ({ id, title, content, sendNoteIDToParent, showBottomMenu, saveN
     sendNoteIDToParent(id);
   }
 
-  const SaveNote = () => {
-    saveNote(id, titleState, contentState);
+  const SaveNote = (event) => {
+    console.log("stuf:", event.currentTarget.textContent)
+    setContentState(event.currentTarget.textContent)
+    saveNote(id, titleState, event.currentTarget.textContent);
     // showBottomMenu(false)
     // sendNoteIDToParent(null);
   }
@@ -61,6 +63,7 @@ const Section = ({ id, title, content, sendNoteIDToParent, showBottomMenu, saveN
 
       <div className="section-content">
         <div className="section-main p-0">
+          {/* 
         <input
             type="text"
             className="note-title"
@@ -68,8 +71,6 @@ const Section = ({ id, title, content, sendNoteIDToParent, showBottomMenu, saveN
             onBlur={SaveNote}
             hidden
           />
-          <div>{JSON.stringify(editorOptions)}</div>
-
           <Editor
             id={"note-" + id}
             className="note"
@@ -97,42 +98,56 @@ const Section = ({ id, title, content, sendNoteIDToParent, showBottomMenu, saveN
             onFocus={handleFocus}
             onBlur={SaveNote}
           />
-        </div>
-        {/* <textarea
+        </div> */}
+
+          {/* <div className="note-content-wrapper"> */}
+          {/* <textarea
             className="note-content"
-            value={contentState ? contentState : ""}sf
-            // onKeyUp={handleKeyDown}
+            value={contentState ? contentState : ""} sf
+            onKeyUp={SaveNote}
             onFocus={handleFocus}
             onBlur={SaveNote}
-            //onChange={e => blah(e.target.value)}sadf
             onChange={e => setContentState(e.target.value)}
-          //onChange={({ target: { value } }) => { setResponse(value)} }
-          />
+          /> */}
+          {/* </div> */}
+
+
+          {/* https://stackoverflow.com/questions/46000544/react-controlled-input-cursor-jumps */}
+          <div
+            role="textbox"
+            contentEditable={true}
+            suppressContentEditableWarning={true}
+            className="note-content"
+            value={contentState ? contentState : ""}
+            //onKeyDown={e => setContentState(e.target.innerHTML)}
+            onInput={(e) => {
+              //SaveNote;
+              //this.cursor = e.target.selectionStart;
+            }}
+            //onInput={(e) => setContentState(e.currentTarget.textContent)}
+            //onKeyUp={SaveNote}
+            onFocus={handleFocus}
+            onBlur={SaveNote}
+          >
+            {contentState}
+          </div>
+
         </div>
 
-        {/* <div className="section-footer text-right">
-          <FontAwesomeIcon icon={saveIcon} className="m-1" onClick={() => SaveNote()} />
-          <FontAwesomeIcon icon="trash" className="m-1" onClick={() => DeleteNote()} />
-
-          {/ * <button className="btn btn-light red btn-sm" onClick={() => DeleteNote()}>
-            <FontAwesomeIcon icon="trash" />
-          </button> * /}
-
-        </div> */}
       </div>
     </div>
   );
 }
 
-Section.propTypes = {
+Note.propTypes = {
   title: PropTypes.string
 }
 
-Section.defaultProps = {
-  title: "Task Tracker Default"
+Note.defaultProps = {
+  title: "Note Default"
 }
 
-export default Section;
+export default Note;
 
 
 

@@ -14,10 +14,10 @@ import './Main.css';
 import Home from "./pages/Home"
 import About from "./pages/About"
 import Settings from "./pages/Settings"
-import App from "./pages/z_App"
+// import App from "./pages/z_App"
 
 // Components
-import Footer from './components/Footer'
+// import Footer from './components/Footer'
 
 
 // Font Awesome Icons
@@ -64,13 +64,11 @@ ReactDOM.render(
                 </div>
             </nav>
         </main>
-        <body>
-            <Route exact path="/" component={Home} />
-            <Route path="/app" component={App} />
-            <Route path="/about" component={About} />
-            <Route path="/Settings" component={Settings} />
-            {/* <Footer /> */}
-        </body>
+        <Route exact path="/" component={Home} />
+        {/* <Route path="/app" component={App} /> */}
+        <Route path="/about" component={About} />
+        <Route path="/Settings" component={Settings} />
+        {/* <Footer /> */}
     </Router>,
 
     // <React.StrictMode>

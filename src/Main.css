@@ -89,26 +89,26 @@ body {
   /* overflow-y: scroll !important; Show vertical scrollbar */
 }
 
-body::-webkit-scrollbar, .section textarea::-webkit-scrollbar {
-  width: 10px;               /* width of the entire scrollbar */
+body::-webkit-scrollbar,
+.section textarea::-webkit-scrollbar {
+  width: 10px; /* width of the entire scrollbar */
 }
 
-body::-webkit-scrollbar-track, .section textarea::-webkit-scrollbar-track {
+body::-webkit-scrollbar-track,
+.section textarea::-webkit-scrollbar-track {
   /* background: orange;        /* color of the tracking area */
 }
 
-body::-webkit-scrollbar-thumb, .section textarea::-webkit-scrollbar-thumb {
-  background-color: #ccc;    /* color of the scroll thumb */
-  border-radius: 20px;       /* roundness of the scroll thumb */
-  border: 2px solid #f1f1f1;  /* creates padding around scroll thumb */
+body::-webkit-scrollbar-thumb,
+.section textarea::-webkit-scrollbar-thumb {
+  background-color: #ccc; /* color of the scroll thumb */
+  border-radius: 20px; /* roundness of the scroll thumb */
+  border: 2px solid #f1f1f1; /* creates padding around scroll thumb */
 }
-body::-webkit-scrollbar-thumb:hover, 
+body::-webkit-scrollbar-thumb:hover,
 .section textarea::-webkit-scrollbar-thumb:hover {
-  background-color: rgb(173, 173, 173);    /* color of the scroll thumb */
+  background-color: rgb(173, 173, 173); /* color of the scroll thumb */
 }
-
-
-
 
 /* CLASS COL-XS TESTER */
 /* CLASS COL-SM TESTER */
@@ -541,9 +541,7 @@ body::-webkit-scrollbar-thumb:hover,
    border-radius: 20px; */
 }
 
-
 .note-content {
-
 }
 
 .note-title {
@@ -564,7 +562,7 @@ body::-webkit-scrollbar-thumb:hover,
   left: 0;
   font-size: 14px;
   color: var(--charcoal);
-  background-color:#cccccc;
+  background-color: #cccccc;
   border-top: 1px solid #949494;
 }
 
@@ -616,9 +614,9 @@ body::-webkit-scrollbar-thumb:hover,
   box-sizing: border-box;
 }
 
-
 div[contenteditable],
-.section textarea,
+/* .section textarea, */
+.note-content,
 .section .note-title {
   outline: none;
   background-color: #f1f1f1f1;
@@ -627,26 +625,64 @@ div[contenteditable],
   padding: 3px 10px;
   outline: 0px solid transparent;
   width: 100%;
+  white-space: pre-wrap;
 }
 
 div[contenteditable],
 .section textarea {
-  resize:none;
-  margin-bottom: -6px; 
+  resize: none;
+  margin-bottom: -6px;
   min-height: 200px;
   /* overflow: auto; */
 }
 
- 
 div[contenteditable]:focus,
 .section textarea:focus,
-.section .note-title:focus { 
+.section .note-title:focus {
   border-left-color: var(--charcoal);
-  border-left: 5px solid; 
+  border-left: 5px solid;
   padding-left: 5px !important;
-  
+
   /* background-color: #ff7979; */
 }
+
+/* ----------------------------- */
+
+.note-content-wrapper {
+  /* easy way to plop the elements on top of each other and have them both sized based on the tallest one's height */
+  display: grid;
+}
+.note-content-wrapper::after {
+  /* Note the weird space! Needed to preventy jumpy behavior */
+  content: attr(data-replicated-value) " ";
+
+  /* This is how textarea text behaves */
+  white-space: pre-wrap;
+
+  /* Hidden from view, clicks, and screen readers */
+  visibility: hidden;
+}
+
+.note-content-wrapper > .note-content {
+  /* You could leave this, but after a user resizes, then it ruins the auto sizing */
+  resize: none;
+
+  /* Firefox shows scrollbar on growth, you can hide like this. */
+  overflow: hidden;
+}
+.note-content-wrapper > .note-content,
+.note-content-wrapper::after {
+  /* Identical styling required!! */
+  border: 1px solid black;
+  padding: 0.5rem;
+  font: inherit;
+
+  /* Place on top of each other */
+  grid-area: 1 / 1 / 2 / 2;
+}
+
+/* ----------------------------------- */
+
 .profile-item {
   margin-bottom: 15px;
 }
@@ -796,7 +832,6 @@ input:checked + .checkbox-label:after {
 .dropdown-item > .dropdown-icon {
   margin: 0 8px 0px -12px;
 }
-
 
 /* 
 .tox-editor-header:not(:focus), .tox-statusbar:not(:focus) {

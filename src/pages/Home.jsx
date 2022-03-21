@@ -1,6 +1,6 @@
 // imports
 import React, { useState, useEffect /*, Component */ } from 'react';
-import sendAsync, { storeSet, storeGet, storeDelete, storeCount } from '../message-control/renderer'
+import sendAsync /*, { storeSet, storeGet, storeDelete, storeCount } */ from '../message-control/renderer'
 import BottomMenu from '../components/BottomMenu'
 
 // components
@@ -14,6 +14,8 @@ const Home = () => {
   const [focussedNoteId, setFocussedNoteId] = useState(null)
   const [noteHasFocus, setNoteHasFocus] = useState(false)
   const [editorOptions, setEditorOptions] = useState([])
+  const [temp, setTemp] = useState();
+
 
   const [saveIcon, setSaveIcon] = useState("cloud")
   const [saveIconColour] = useState("aqua")
@@ -32,7 +34,6 @@ const Home = () => {
       let notesResult = await sendAsync(getNotesquery);
       if (notesResult.length > 0)
         setNotes(notesResult)
-      
 
       let getEditorOptionsQuery = `SELECT option from tinymce_options WHERE type = 'toolbar' AND enabled`;
       let editorOptionsResults = await sendAsync(getEditorOptionsQuery)
@@ -41,10 +42,12 @@ const Home = () => {
       editorOptionsResults.forEach(o => {
         tmpEditorOptionsString += o.option + " "
       });
+      //setTemp(tmpEditorOptionsString)
       console.log(tmpEditorOptionsString)
-      if(editorOptionsResults.length > 0) 
+
+      if (editorOptionsResults.length > 0)
         setEditorOptions([tmpEditorOptionsString])
-      
+
     } catch (error) {
 
     }
@@ -114,7 +117,12 @@ const Home = () => {
 
 
   const SaveNote = (id, title, content) => {
+    //console.log("--------")
     console.log("Saving note: " + id)
+    // console.log(content)
+    // console.log("--------")
+
+
     //setSaveIconColour("orange")
     setSaveIcon("cloud-upload-alt")
     let query =
@@ -147,21 +155,20 @@ const Home = () => {
       {notes.length > 0 ?
         <div id="notes">
           {notes.map(r =>
-            // <div className="row">
-              <Note key={r.id}
-                className="col-12"
-                id={r.id}
-                title={r.title}
-                content={r.content}
-                sendNoteIDToParent={sendNoteIDToParent}
-                showBottomMenu={showBottomMenu}
-                saveNote={SaveNote}
-                editorOptions={editorOptions} />
-              /* <div className="col-12 text-right">
-
-                <button className="btn btn-primary btn-sm rounded-circle">+</button>
-              </div>
+            // <div className="rows">
+            <Note key={r.id}
+              className="col-12"
+              id={r.id}
+              title={r.title}
+              content={r.content}
+              sendNoteIDToParent={sendNoteIDToParent}
+              showBottomMenu={showBottomMenu}
+              saveNote={SaveNote}
+              editorOptions={editorOptions} />
+            /* <div className="col-12 text-center">
+              <button className="btn btn-primary btn-sm rounded-circle">+</button>
             </div> */
+            // </div>
           )}
         </div>
         :
