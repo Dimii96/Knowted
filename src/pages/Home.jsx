@@ -29,16 +29,16 @@ const Home = () => {
     try {
       console.log(new Date())
 
-      let getEditorOptionsQuery = `SELECT option from tinymce_options WHERE type = 'toolbar' AND enabled`;
-      let editorOptionsResults = await sendAsync(getEditorOptionsQuery)
-      //console.log(JSON.stringify(editorOptionsResults))
-      let tmpEditorOptionsString = '';
-      if (editorOptionsResults.length > 0) {
-        editorOptionsResults.forEach(o => {
-          tmpEditorOptionsString += o.option + ' '
-        });
-        setEditorOptions(tmpEditorOptionsString)
-      }
+      // let getEditorOptionsQuery = `SELECT option from tinymce_options WHERE type = 'toolbar' AND enabled`;
+      // let editorOptionsResults = await sendAsync(getEditorOptionsQuery)
+      // //console.log(JSON.stringify(editorOptionsResults))
+      // let tmpEditorOptionsString = '';
+      // if (editorOptionsResults.length > 0) {
+      //   editorOptionsResults.forEach(o => {
+      //     tmpEditorOptionsString += o.option + ' '
+      //   });
+      //   setEditorOptions(tmpEditorOptionsString)
+      // }
 
       let getNotesquery = `SELECT * FROM notes WHERE tab = ${tab} ORDER BY [order] ASC`;
       let notesResult = await sendAsync(getNotesquery);
