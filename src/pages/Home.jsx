@@ -53,7 +53,7 @@ const Home = () => {
         tmpEditorOptionsString += o.option + " "
       });
       //setTemp(tmpEditorOptionsString)
-      console.log(tmpEditorOptionsString)
+      // console.log(tmpEditorOptionsString)
 
       if (editorOptionsResults.length > 0)
         setEditorOptions([tmpEditorOptionsString])
@@ -68,8 +68,8 @@ const Home = () => {
     // Insert into db
     let query = `
     INSERT INTO notes ('order', tab)
-    VALUES (${notes.length + 1}, ${tab});`;
-    await sendAsync(query).then((result) => {
+    VALUES (?, ?);`;
+    await sendAsync(query, [(notes.length + 1), tab ]).then((result) => {
       console.log("New Insert Result: " + JSON.stringify(result))
       if (!result) {
         alert("There was an issue creating new note.")
@@ -101,10 +101,9 @@ const Home = () => {
       return;
     }
 
-    let query = `DELETE FROM notes WHERE id = '${focussedNoteId}';`;
-    if (window.confirm("Delete note?")) {
-
-      sendAsync(query).then((result) => {
+    if (1==1 /*window.confirm("Delete note?")*/) {
+      let query = `DELETE FROM notes WHERE id = ?;`;
+      sendAsync(query, [focussedNoteId]).then((result) => {
         if (!result) {
           alert("There was an issue deleting!")
         } else {
@@ -113,8 +112,8 @@ const Home = () => {
           console.log("Notes: " + focussedNoteId + " has been deleted.")
         }
       });
+      return;
     }
-
   }
 
   const sendNoteIDToParent = (index) => {
@@ -135,13 +134,9 @@ const Home = () => {
 
     //setSaveIconColour("orange")
     setSaveIcon("cloud-upload-alt")
-    let query =
-      `UPDATE notes
-    SET title = '${title}', 
-    content = '${content}'
-    WHERE id = ${id};`;
+    let query = `UPDATE notes SEdT title = ?, content = ? WHERE id = ?;`;
 
-    sendAsync(query).then((result) => {
+    sendAsync(query, [title, content, id]).then((result) => {
       if (!result) {
         alert("There was an issue saving!")
       } else {
@@ -171,6 +166,7 @@ const Home = () => {
               id={r.id}
               title={r.title}
               content={r.content}
+              editable={r.editable}
               sendNoteIDToParent={sendNoteIDToParent}
               showBottomMenu={showBottomMenu}
               saveNote={SaveNote}
