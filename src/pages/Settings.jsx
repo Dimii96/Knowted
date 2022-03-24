@@ -18,7 +18,7 @@ function Settings() {
     // Retrieve Tiny.MCE settings
     let query = `SELECT * FROM tinymce_options WHERE type = 'toolbar'`;
     try {
-      let result = await sendAsync(query); 
+      let result = await sendAsync(query);
       setTinyMCESettings(result)
     } catch (error) {
       alert("There was an issue retriving Editor Options.")
@@ -46,20 +46,7 @@ function Settings() {
     <div className="container">
       <div id="page-title">Settings</div>
 
-      <div className="section">
-        <div className="section-content">
-          <div className="section-title subheading px-2">
-            <label>title</label>
-          </div>
-          <div className="section-main">
-            <p>Application settings and options will go here</p>
-            <Link className="App-link" to="/">Link to Home</Link>
-          </div>
-        </div>
-      </div>
-
-
-      <div className="section">
+      {/* <div className="section">
         <div className="section-content">
           <div className="section-title subheading px-2">
             <label>Customise your notes editor options</label>
@@ -75,19 +62,18 @@ function Settings() {
               )}
             </form>
 
-
           </div>
         </div>
-      </div>
+      </div> */}
 
 
-      <div className="section" hidden>
+      {/*
+      <div className="section">
         <div className="section-content">
           <div className="section-title subheading px-2">
             <label>Accessibility (Not functional yet)</label>
           </div>
           <div className="section-main">
-
             <div className="row  px-0">
               <div className="col-12">
                 <label className="form-label bold">Font Size: 12px</label>
@@ -126,6 +112,7 @@ function Settings() {
           </div>
         </div>
       </div>
+      */}
 
 
       <div className="section">
@@ -135,8 +122,9 @@ function Settings() {
           </div>
           <div className="section-main">
             <ul>
+              <li>Application settings and options will go here</li>
               <li>Your notes and not headings will automatically save when you click out of the currently active notes box.</li>
-              <li>Stuff</li>
+              <li><Link className="App-link" to="/">Link to Home</Link></li>
             </ul>
           </div>
         </div>

@@ -49,12 +49,12 @@ ReactDOM.render(
                     <div className="collapse navbar-collapse  justify-content-end" id="navbarNav">
                         <ul className="navbar-nav white">
 
-                            <li className="nav-item">
+                            {/* <li className="nav-item">
                                 <Link className="nav-link" to="/"><FontAwesomeIcon icon="home" /></Link>
-                            </li>
-                            <li className="nav-item">
+                            </li> */}
+                            {/* <li className="nav-item">
                                 <Link className="nav-link" to="/settings"><FontAwesomeIcon icon="cog" /></Link>
-                            </li>
+                            </li> */}
                             {/* <li className="nav-item">
                                 <Link className="nav-link" to="/app"><FontAwesomeIcon icon="circle" /></Link>
                             </li> */}
