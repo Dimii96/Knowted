@@ -8,7 +8,7 @@ import { Editor } from '@tinymce/tinymce-react';
 
 // import tinymce from "tinymce";
 
-const Note = ({ id, title, content, sendNoteIDToParent, showBottomMenu, saveNote, editorOptions }) => {
+const Note = ({ id, title, content, editable, sendNoteIDToParent, showBottomMenu, saveNote, editorOptions }) => {
   const [contentState, setContentState] = useState(content);
   const [titleState, setTitleState] = useState(title);
   const [toolbar, setToolbar] = useState('');
@@ -20,10 +20,10 @@ const Note = ({ id, title, content, sendNoteIDToParent, showBottomMenu, saveNote
       setToolbar(editorOptions)
     } else {
       // Default to all
-      //setToolbar('undo redo | formatselect | ' +
-      // 'bold italic backcolor | alignleft aligncenter ' +
-      // 'alignright alignjustify | bullist numlist outdent indent | ' +
-      // 'removeformat | help')
+      setToolbar('undo redo | formatselect | ' +
+      'bold italic backcolor | alignleft aligncenter ' +
+      'alignright alignjustify | bullist numlist outdent indent | ' +
+      'removeformat | help')
     }
 
   }, []);
@@ -51,10 +51,10 @@ const Note = ({ id, title, content, sendNoteIDToParent, showBottomMenu, saveNote
   }
 
   const SaveNote = (event) => {
-    console.log("stuf:", event.currentTarget.textContent)
-    setContentState(event.currentTarget.textContent)
-    saveNote(id, titleState, event.currentTarget.textContent);
-    // showBottomMenu(false)
+    //console.log("stuff:", event.currentTarget.innerText)
+    setContentState(event.currentTarget.innerText)
+    saveNote(id, titleState, event.currentTarget.innerText);
+    showBottomMenu(false)
     // sendNoteIDToParent(null);
   }
 
@@ -76,62 +76,53 @@ const Note = ({ id, title, content, sendNoteIDToParent, showBottomMenu, saveNote
 
       <div className="section-content">
         <div className="section-main p-0">
-          {/* 
-        <input
+           
+        {/* <input
             type="text"
             className="note-title"
             value={titleState}
             onBlur={SaveNote}
             hidden
-          />
-          <Editor
-            id={"note-" + id}
-            className="note"
-            //tinymceScriptSrc={process.env.PUBLIC_URL + '/js/tinymce/tinymce.min.js'}
-            apiKey="oskp6rm7cjwp39oz8g7hpalw870n128tgax61gh0sxnod2yy"
-            //onInit={(evt, editor) => editorRef.current = editor}
-            initialValue={contentState}
-            init={{
-              minheight: 200,
-              menubar: false,
-              resize: false,
-              plugins: 
-              [ 
-                ' autoresize'
-                // 'autoresize advlist autolink lists link image charmap print preview anchor',
-                // 'searchreplace visualblocks code fullscreen',
-                // 'insertdatetime media table paste code help wordcount'
-              ],
-              toolbar: toolbar,
-              toolbar_location: 'right',
-              content_style: 'body { font-family:Helvetica,Arial,sans-serif; font-size:14px }',
-              autoresize_bottom_margin: 0,
-              branding: false,
-              //inline: true,
-              count: false
-            }}
-            onKeyUp={e => setContentState(e.target.innerText)}
-            onFocus={handleFocus}
-            onBlur={SaveNote}
-          />
-        </div> */}
-
-          {/* <div className="note-content-wrapper"> */}
-          {/* <textarea
-            className="note-content"
-            value={contentState ? contentState : ""} sf
-            onKeyUp={SaveNote}
-            onFocus={handleFocus}
-            onBlur={SaveNote}
-            onChange={e => setContentState(e.target.value)}
           /> */}
-          {/* </div> */}
 
+           {/* https://stackoverflow.com/questions/46000544/react-controlled-input-cursor-jumps */}
+           {/* <Editor 
+             id={"note-" + id}
+             className="note"
+             //tinymceScriptSrc={process.env.PUBLIC_URL + '/js/tinymce/tinymce.min.js'}
+             apiKey="oskp6rm7cjwp39oz8g7hpalw870n128tgax61gh0sxnod2yy"
+             //onInit={(evt, editor) => editorRef.current = editor}
+             initialValue={contentState}
+             init={{
+               minheight: 200,
+               menubar: false,
+               resize: false,
+               plugins: 
+               [ 
+                 ' autoresize'
+                 // 'autoresize advlist autolink lists link image charmap print preview anchor',
+                 // 'searchreplace visualblocks code fullscreen',
+                 // 'insertdatetime media table paste code help wordcount'
+               ],
+               toolbar: toolbar,
+               toolbar_location: 'right',
+               content_style: 'body { font-family:Helvetica,Arial,sans-serif; font-size:14px }',
+               autoresize_bottom_margin: 0,
+               branding: true,
+               statusbar: false,
+               //inline: true,
+               count: false
+             }}
+             onKeyUp={e => setContentState(e.currentTarget.innerText)}
+             onFocus={handleFocus}
+             onBlur={SaveNote}
+           /> */}
 
-          {/* https://stackoverflow.com/questions/46000544/react-controlled-input-cursor-jumps */}
+         
           <div
             role="textbox"
-            contentEditable={true}
+            // contentEditable={true}
+            contentEditable="plaintext-only"
             suppressContentEditableWarning={true}
             className="note-content"
             value={contentState ? contentState : ""}
@@ -140,13 +131,13 @@ const Note = ({ id, title, content, sendNoteIDToParent, showBottomMenu, saveNote
               //SaveNote;
               //this.cursor = e.target.selectionStart;
             }}
-            //onInput={(e) => setContentState(e.currentTarget.textContent)}
-            //onKeyUp={SaveNote}
+      
             onFocus={handleFocus}
             onBlur={SaveNote}
           >
             {contentState}
-          </div>
+          </div> 
+
 
         </div>
 
