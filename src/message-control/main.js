@@ -5,10 +5,11 @@ const database = new sqlite3.Database('./src/db.sqlite3', sqlite3.OPEN_READWRITE
     if (err) console.error('Database opening error: ', err);
 });
 
-ipcMain.on('asynchronous-message', (event, arg) => {
+ipcMain.on('asynchronous-message', (event, sqlQuery, parameters) => {
     try {
-        const sql = arg;
-        database.all(sql, (err, rows) => {
+        //const sql = arg;
+        console.log("parameters: ", parameters)
+        database.all(sqlQuery, parameters, (err, rows) => {
             event.reply('asynchronous-reply', (err && err.message) || rows);
         });
 
