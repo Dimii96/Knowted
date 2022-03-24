@@ -6,25 +6,27 @@ import { FontAwesomeIcon } from '@fortawesome/react-fontawesome'
 import { faBorderNone } from '@fortawesome/free-solid-svg-icons';
 
 
-const BottomMenu = ({ id, disabled, AddNewNote, deleteNote, saveNote }) => {
-  
+const BottomMenu = ({ id, disabled, addNewNote, deleteNote, saveNote }) => {
+
+  const handleDelete = () => {
+    deleteNote(id)
+  }
+
   return (
-
-    <div id="bm-container" className={"row px-3" }>
-
+    <div id="bm-container" className={"row px-3"}>
       <div id="bm-main" className="">
 
         <div className="bm-item">
           {id}
-        </div> 
-
-        <div className={"btn btn-outline-dark btn-sm bm-item"}
-          onClick={() => saveNote(id)} >
-          <FontAwesomeIcon icon="save" />
         </div>
 
+        {/* <div className={"btn btn-outline-dark btn-sm bm-item"}
+          onClick={() => saveNote(id)} >
+          <FontAwesomeIcon icon="save" />
+        </div> */}
+
         <div className={"btn btn-outline-dark btn-sm bm-item " + disabled}
-        onClick={AddNewNote} >
+          onClick={addNewNote} >
           <FontAwesomeIcon icon="plus-circle" />
         </div>
 
@@ -32,9 +34,8 @@ const BottomMenu = ({ id, disabled, AddNewNote, deleteNote, saveNote }) => {
           <FontAwesomeIcon icon="grip-lines-vertical" className="mx-1" />
         </div>
 
-        <div className={"btn btn-outline-dark btn-sm bm-item " + disabled} 
-        onClick={deleteNote} >
-        
+        <div className={"btn btn-outline-dark btn-sm bm-item " + disabled}
+          onClick={handleDelete} >
           <FontAwesomeIcon icon="trash" />
         </div>
 

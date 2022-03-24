@@ -1,20 +1,37 @@
 // imports
-import React, { useState } from 'react';
+import React, { useState, useRef, useEffect } from 'react';
 import PropTypes from 'prop-types'
 import sendAsync from '../message-control/renderer'
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome'
 
-// https://medium.com/cameron-nokes/how-to-store-user-data-in-electron-3ba6bf66bc1e
+import { Editor } from '@tinymce/tinymce-react';
 
+// import tinymce from "tinymce";
 
-const Section = ({ id, title, content, sendNoteIDToParent, showBottomMenu, saveNote  }) => {
+const Note = ({ id, title, content, editable, sendNoteIDToParent, showBottomMenu, saveNote, editorOptions }) => {
   const [contentState, setContentState] = useState(content);
   const [titleState, setTitleState] = useState(title);
+  const [toolbar, setToolbar] = useState('');
+  const [enabledd, setEnabled] = useState(true)
+
+
+  useEffect(() => {
+    if (editorOptions) {
+      setToolbar(editorOptions)
+    } else {
+      // Default to all
+      setToolbar('undo redo | formatselect | ' +
+      'bold italic backcolor | alignleft aligncenter ' +
+      'alignright alignjustify | bullist numlist outdent indent | ' +
+      'removeformat | help')
+    }
+
+  }, []);
   // const [saveIcon, setSaveIcon] = useState("cloud")
   // const [saveIconColour] = useState("aqua")
 
   // const handleKeyDown = (event) => {
-    
+
   //   event.preventDefault();
   //   saveNote(response);
   //   let charCode = String.fromCharCode(event.which).toLowerCase();
@@ -33,12 +50,21 @@ const Section = ({ id, title, content, sendNoteIDToParent, showBottomMenu, saveN
     sendNoteIDToParent(id);
   }
 
-  
-  const SaveNote = () => {
-    saveNote(id, titleState, contentState);
-    // showBottomMenu(false)
+  const SaveNote = (event) => {
+    //console.log("stuff:", event.currentTarget.innerText)
+    setContentState(event.currentTarget.innerText)
+    saveNote(id, titleState, event.currentTarget.innerText);
+    showBottomMenu(false)
     // sendNoteIDToParent(null);
   }
+
+  const editorRef = useRef(null);
+  const log = () => {
+    if (editorRef.current) {
+      console.log("XZ: " + editorRef.current.getContent());
+    }
+  };
+
 
   return (
     <div className="section">
@@ -48,51 +74,87 @@ const Section = ({ id, title, content, sendNoteIDToParent, showBottomMenu, saveN
         </div>
       </div> */}
 
-
       <div className="section-content">
         <div className="section-main p-0">
-          <input 
+           
+        {/* <input
             type="text"
             className="note-title"
-            value={titleState} 
+            value={titleState}
             onBlur={SaveNote}
-            onChange={e => setTitleState(e.target.value)}
-            />
-          <textarea
+            hidden
+          /> */}
+
+           {/* https://stackoverflow.com/questions/46000544/react-controlled-input-cursor-jumps */}
+           {/* <Editor 
+             id={"note-" + id}
+             className="note"
+             //tinymceScriptSrc={process.env.PUBLIC_URL + '/js/tinymce/tinymce.min.js'}
+             apiKey="oskp6rm7cjwp39oz8g7hpalw870n128tgax61gh0sxnod2yy"
+             //onInit={(evt, editor) => editorRef.current = editor}
+             initialValue={contentState}
+             init={{
+               minheight: 200,
+               menubar: false,
+               resize: false,
+               plugins: 
+               [ 
+                 ' autoresize'
+                 // 'autoresize advlist autolink lists link image charmap print preview anchor',
+                 // 'searchreplace visualblocks code fullscreen',
+                 // 'insertdatetime media table paste code help wordcount'
+               ],
+               toolbar: toolbar,
+               toolbar_location: 'right',
+               content_style: 'body { font-family:Helvetica,Arial,sans-serif; font-size:14px }',
+               autoresize_bottom_margin: 0,
+               branding: true,
+               statusbar: false,
+               //inline: true,
+               count: false
+             }}
+             onKeyUp={e => setContentState(e.currentTarget.innerText)}
+             onFocus={handleFocus}
+             onBlur={SaveNote}
+           /> */}
+
+         
+          <div
+            role="textbox"
+            // contentEditable={true}
+            contentEditable="plaintext-only"
+            suppressContentEditableWarning={true}
             className="note-content"
             value={contentState ? contentState : ""}
-            // onKeyUp={handleKeyDown}
+            //onKeyDown={e => setContentState(e.target.innerHTML)}
+            onInput={(e) => {
+              //SaveNote;
+              //this.cursor = e.target.selectionStart;
+            }}
+      
             onFocus={handleFocus}
             onBlur={SaveNote}
-            //onChange={e => blah(e.target.value)}
-            onChange={e => setContentState(e.target.value)}
-            //onChange={({ target: { value } }) => { setResponse(value)} }
-          />
+          >
+            {contentState}
+          </div> 
+
+
         </div>
 
-        {/* <div className="section-footer text-right">
-          <FontAwesomeIcon icon={saveIcon} className="m-1" onClick={() => SaveNote()} />
-          <FontAwesomeIcon icon="trash" className="m-1" onClick={() => DeleteNote()} />
-
-          {/ * <button className="btn btn-light red btn-sm" onClick={() => DeleteNote()}>
-            <FontAwesomeIcon icon="trash" />
-          </button> * /}
-
-        </div> */}
       </div>
-    </div >
+    </div>
   );
 }
 
-Section.propTypes = {
+Note.propTypes = {
   title: PropTypes.string
 }
 
-Section.defaultProps = {
-  title: "Task Tracker"
+Note.defaultProps = {
+  title: "Note Default"
 }
 
-export default Section;
+export default Note;
 
 
 
