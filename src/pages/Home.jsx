@@ -69,7 +69,7 @@ const Home = () => {
     let query = `
     INSERT INTO notes ('order', tab)
     VALUES (?, ?);`;
-    await sendAsync(query, [(notes.length + 1), tab ]).then((result) => {
+    await sendAsync(query, [(notes.length + 1), tab]).then((result) => {
       console.log("New Insert Result: " + JSON.stringify(result))
       if (!result) {
         alert("There was an issue creating new note.")
@@ -101,7 +101,7 @@ const Home = () => {
       return;
     }
 
-    if (1==1 /*window.confirm("Delete note?")*/) {
+    if (1 == 1 /*window.confirm("Delete note?")*/) {
       let query = `DELETE FROM notes WHERE id = ?;`;
       sendAsync(query, [focussedNoteId]).then((result) => {
         if (!result) {
@@ -134,7 +134,7 @@ const Home = () => {
 
     //setSaveIconColour("orange")
     setSaveIcon("cloud-upload-alt")
-    let query = `UPDATE notes SEdT title = ?, content = ? WHERE id = ?;`;
+    let query = `UPDATE notes SET title = ?, content = ? WHERE id = ?;`;
 
     sendAsync(query, [title, content, id]).then((result) => {
       if (!result) {
