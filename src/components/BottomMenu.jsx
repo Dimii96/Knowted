@@ -6,19 +6,20 @@ import { FontAwesomeIcon } from '@fortawesome/react-fontawesome'
 import { faBorderNone } from '@fortawesome/free-solid-svg-icons';
 
 
-const BottomMenu = ({ id, disabled, addNewNote, deleteNote, saveNote }) => {
+const BottomMenu = ({ id, disabled, addNewNote, deleteNote, saveNote, noteHasFocus }) => {
 
   const handleDelete = () => {
     deleteNote(id)
   }
 
   return (
+
     <div id="bm-container" className={"row px-3"}>
+
       <div id="bm-main" className="">
 
-        <div className="bm-item">
-          {id}
-        </div>
+
+
 
         {/* <div className={"btn btn-outline-dark btn-sm bm-item"}
           onClick={() => saveNote(id)} >
@@ -30,15 +31,21 @@ const BottomMenu = ({ id, disabled, addNewNote, deleteNote, saveNote }) => {
           <FontAwesomeIcon icon="plus-circle" />
         </div>
 
-        <div className="bm-item ">
-          <FontAwesomeIcon icon="grip-lines-vertical" className="mx-1" />
-        </div>
+        {(noteHasFocus) ?
+          <>
+            <div className="bm-item ">
+              <FontAwesomeIcon icon="grip-lines-vertical" className="mx-1" />
+            </div>
 
-        <div className={"btn btn-outline-dark btn-sm bm-item " + disabled}
-          onClick={handleDelete} >
-          <FontAwesomeIcon icon="trash" />
-        </div>
-
+            <div className={"btn btn-outline-dark btn-sm bm-item " + disabled}
+              onClick={handleDelete} >
+              <FontAwesomeIcon icon="trash" />
+            </div>
+            {/* <small className="bm-item">
+              {id}
+            </small> */}
+          </>
+          : null}
       </div>
 
       {/* <div id="bm-toggle" className="">

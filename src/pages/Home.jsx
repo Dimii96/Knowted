@@ -58,6 +58,9 @@ const Home = () => {
       if (editorOptionsResults.length > 0)
         setEditorOptions([tmpEditorOptionsString])
 
+      noteHasFocus(true);
+
+
     } catch (error) {
       console.log("There was an error loading the tab.")
     }
@@ -112,6 +115,7 @@ const Home = () => {
           console.log("Notes: " + focussedNoteId + " has been deleted.")
         }
       });
+      noteHasFocus(false);
       return;
     }
   }
@@ -187,7 +191,7 @@ const Home = () => {
       <BottomMenu
         id={focussedNoteId}
         noteHasFocus={noteHasFocus}
-        disabled={false}
+        // disabled={false}
         addNewNote={AddNewNote}
         deleteNote={DeleteNote}
         saveNote={SaveNote} />

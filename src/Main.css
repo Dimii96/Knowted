@@ -575,17 +575,12 @@ body::-webkit-scrollbar-thumb:hover,
   padding-right: 5px;
   color: var(--body-colour);
   height: 40px;
-  min-width: 205px;
+  /* min-width: 205px; */
 }
 
 /* #bm-container:hover {
   background-color: #fbb7b7;
 } */
-
-.bm-item {
-  margin-left: 4px;
-  margin-right: 4px;
-}
 
 #bm-main,
 #bm-toggle {
@@ -599,6 +594,11 @@ body::-webkit-scrollbar-thumb:hover,
 
 .bm-item {
   display: inline;
+}
+
+.bm-item {
+  margin-left: 4px;
+  margin-right: 4px;
 }
 
 .bm-toggle > [icon="cog"] {
