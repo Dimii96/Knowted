@@ -5,17 +5,17 @@ My take of a basic note editor for Windows and Mac.
 This project is in early developement and is still in a WIP state.
 I do not recommend using this program as a note taker during this stage as you may lost any notes written.
 
-## Features
+## Current Features
 
   - Write notes separated in sections 
   - Notes saved locally
   - Delete notes
+  - Tabs (add, delete, rename)
 
 #### Future Features
 ###### * These fure plans are not guaranteed.
   - WYSIWYG editing  
   - Cloud saving 
-  - Tabs
   - More intuitive UI (drag and drop notes within section and to different tabs etc.) 
   - and more
 
