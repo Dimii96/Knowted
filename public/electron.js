@@ -1,12 +1,9 @@
-const electron = require('electron');
-
-require('../src/message-control/main');
-
-const { app } = electron;
-const { BrowserWindow } = electron;
-
+const { app, BrowserWindow, Menu} = require('electron');
 const path = require('path');
 const isDev = require('electron-is-dev');
+const applicationMenu = require('./application-menu');
+
+require('../src/message-control/main');
 
 let mainWindow;
 
@@ -40,7 +37,11 @@ function createWindow() {
     mainWindow.webContents.openDevTools();
 }
 
-app.on('ready', createWindow);
+app.on('ready', () => {
+    Menu.setApplicationMenu(applicationMenu);
+    createWindow();
+
+});
 
 app.on('window-all-closed', () => {
     if (process.platform !== 'darwin') {

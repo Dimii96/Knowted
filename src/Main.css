@@ -840,3 +840,16 @@ input:checked + .checkbox-label:after {
   /* display: none !important; *
   background-color: blue;
 } */
+
+.tab-item {
+  padding: 0 1px;
+  border-bottom: 2px solid #f1f1f1;
+}
+.tab-item.active  {
+  border:2px solid rgb(255, 255, 255);
+  border-bottom:0;
+  -moz-border-radius:5px 5px 0 0;
+  -webkit-border-radius:5px 5px 0 0;
+  border-radius: 5px 5px 0 0;
+
+}

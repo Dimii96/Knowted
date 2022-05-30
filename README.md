@@ -3,7 +3,7 @@
 
 My take of a basic note editor for Windows and Mac.
 This project is in early developement and is still in a WIP state.
-I do not recommend using this program as a note taker during this stage as you may lose any notes written.
+I do not recommend using this program as a note taker during this stage as you may lost any notes written.
 
 ## Features
 

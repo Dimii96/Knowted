@@ -1,33 +1,40 @@
 // imports
-import React, { useState, useEffect /*, Component */ } from 'react';
+import React, { useState, useEffect /*, Component */ ,componentDidUpdate } from 'react';
 import sendAsync /*, { storeSet, storeGet, storeDelete, storeCount } */ from '../message-control/renderer'
 import BottomMenu from '../components/BottomMenu'
 
 // components
 import Note from '../components/Note'
+import { jsonDiff } from 'prettier';
+import { isWindows } from 'prettier';
+import { useParams } from 'react-router-dom/cjs/react-router-dom.min';
 
 
-const Home = () => {
+const Home = (props) => {
+  
+  
+  const { tabID = 1} = useParams();
 
   const [notes, setNotes] = useState([]);
-  const [tab] = useState(1)
   const [focussedNoteId, setFocussedNoteId] = useState(null)
   const [noteHasFocus, setNoteHasFocus] = useState(false)
   const [editorOptions, setEditorOptions] = useState()
 
   const [saveIcon, setSaveIcon] = useState("cloud")
   const [saveIconColour] = useState("aqua")
-
+ 
   useEffect(() => {
-    LoadTab();
-    //eslint-disable-next-line react-hooks/exhaustive-deps
-  }, []);
+    console.log(new Date())
+    console.log("Tab:", tabID);
+    LoadTab(tabID);
+  
+
+  }, [tabID]);
 
   //logger.trace("Entering cheese testing");
   // Init load of notes
   async function LoadTab() {
     try {
-      console.log(new Date())
 
       // let getEditorOptionsQuery = `SELECT option from tinymce_options WHERE type = 'toolbar' AND enabled`;
       // let editorOptionsResults = await sendAsync(getEditorOptionsQuery)
@@ -40,40 +47,42 @@ const Home = () => {
       //   setEditorOptions(tmpEditorOptionsString)
       // }
 
-      let getNotesquery = `SELECT * FROM notes WHERE tab = ${tab} ORDER BY [order] ASC`;
-      let notesResult = await sendAsync(getNotesquery);
-      if (notesResult.length > 0)
-        setNotes(notesResult)
+      let getNotesquery = `SELECT * FROM notes WHERE tab = ? ORDER BY [order] ASC`;
+      //console.log("Notes query", getNotesquery)
+      let notesResult = await sendAsync("GetNotes", getNotesquery, [(tabID ? tabID : 1)]);
+      //console.log("Notes result: "+ JSON.stringify(notesResult))
+      if (notesResult.status == 1)
+        setNotes(notesResult.data)
 
-      let getEditorOptionsQuery = `SELECT option from tinymce_options WHERE type = 'toolbar' AND enabled`;
-      let editorOptionsResults = await sendAsync(getEditorOptionsQuery)
-      //console.log(JSON.stringify(editorOptionsResults))
-      let tmpEditorOptionsString = "";
-      editorOptionsResults.forEach(o => {
-        tmpEditorOptionsString += o.option + " "
-      });
+      // // TinyMCE Options  
+      // let getEditorOptionsQuery = `SELECT option from tinymce_options WHERE type = 'toolbar' AND enabled`;
+      // let editorOptionsResults = await sendAsync("GetEditorOptions", getEditorOptionsQuery)
+      // //console.log(JSON.stringify(editorOptionsResults))
+      // let tmpEditorOptionsString = "";
+      // editorOptionsResults.forEach(o => {
+      //   tmpEditorOptionsString += o.option + " "
+      // });
       //setTemp(tmpEditorOptionsString)
       // console.log(tmpEditorOptionsString)
 
-      if (editorOptionsResults.length > 0)
-        setEditorOptions([tmpEditorOptionsString])
+      // if (editorOptionsResults.length > 0)
+      //   setEditorOptions([tmpEditorOptionsString])
 
-      noteHasFocus(true);
+      setNoteHasFocus(true);
 
 
     } catch (error) {
-      console.log("There was an error loading the tab.")
+      console.log("There was an error loading the home page.", error)
     }
   }
 
   const AddNewNote = async (value) => {
-
     // Insert into db
     let query = `
     INSERT INTO notes ('order', tab)
     VALUES (?, ?);`;
-    await sendAsync(query, [(notes.length + 1), tab]).then((result) => {
-      console.log("New Insert Result: " + JSON.stringify(result))
+    await sendAsync("AddNewNote",query, [(notes.length + 1), tabID]).then((result) => {
+      //console.log("New Insert Result: " + JSON.stringify(result))
       if (!result) {
         alert("There was an issue creating new note.")
       } else {
@@ -82,16 +91,13 @@ const Home = () => {
     });
 
     // Retrieve new note
-    let retriveNewRowQuery = `SELECT max(id) AS id FROM notes WHERE tab = ${tab};`;
-    await sendAsync(retriveNewRowQuery).then((result) => {
-      console.log("MAX: ")
-      console.log(JSON.stringify(result))
+    let retriveNewRowQuery = `SELECT max(id) AS id FROM notes WHERE tab = ${tabID};`;
+    await sendAsync("GetNewNote", retriveNewRowQuery).then((result) => {
       var newRowToAdd = {
-        id: result[0].id,
+        id: result.data[0].id,
         title: "",
         content: ""
       }
-      console.log(newRowToAdd)
       // Append to list
       setNotes(notes => [...notes, newRowToAdd])
     });
@@ -106,7 +112,7 @@ const Home = () => {
 
     if (1 == 1 /*window.confirm("Delete note?")*/) {
       let query = `DELETE FROM notes WHERE id = ?;`;
-      sendAsync(query, [focussedNoteId]).then((result) => {
+      sendAsync("DeleteNote", query, [focussedNoteId]).then((result) => {
         if (!result) {
           alert("There was an issue deleting!")
         } else {
@@ -115,7 +121,7 @@ const Home = () => {
           console.log("Notes: " + focussedNoteId + " has been deleted.")
         }
       });
-      noteHasFocus(false);
+      setNoteHasFocus(false);
       return;
     }
   }
@@ -130,17 +136,13 @@ const Home = () => {
 
 
   const SaveNote = (id, title, content) => {
-    //console.log("--------")
-    console.log("Saving note: " + id)
-    // console.log(content)
-    // console.log("--------")
-
+    //console.log("Saving note: " + id)
 
     //setSaveIconColour("orange")
     setSaveIcon("cloud-upload-alt")
     let query = `UPDATE notes SET title = ?, content = ? WHERE id = ?;`;
 
-    sendAsync(query, [title, content, id]).then((result) => {
+    sendAsync("SaveNote", query, [title, content, id]).then((result) => {
       if (!result) {
         alert("There was an issue saving!")
       } else {
@@ -158,9 +160,7 @@ const Home = () => {
 
   return (
     <div id="Home" className="container-fluid mt-2">
-
-      {/* <Header title={test} /> */}
-
+  
       {notes.length > 0 ?
         <div id="notes">
           {notes.map(r =>
