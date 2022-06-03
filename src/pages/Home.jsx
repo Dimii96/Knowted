@@ -1,33 +1,34 @@
 // imports
-import React, { useState, useEffect /*, Component */ } from 'react';
+import React, { useState, useEffect /*, Component */ ,componentDidUpdate } from 'react';
 import sendAsync /*, { storeSet, storeGet, storeDelete, storeCount } */ from '../message-control/renderer'
+import { OkayCancel } from '../message-control/confirmationBox'
 import BottomMenu from '../components/BottomMenu'
 
 // components
 import Note from '../components/Note'
+import { jsonDiff } from 'prettier';
+import { isWindows } from 'prettier';
+import { useParams } from 'react-router-dom/cjs/react-router-dom.min';
 
 
-const Home = () => {
+
+export default function Home(props) {
+  
+  const { tabID } = useParams();
 
   const [notes, setNotes] = useState([]);
-  const [tab] = useState(1)
   const [focussedNoteId, setFocussedNoteId] = useState(null)
   const [noteHasFocus, setNoteHasFocus] = useState(false)
   const [editorOptions, setEditorOptions] = useState()
-
-  const [saveIcon, setSaveIcon] = useState("cloud")
-  const [saveIconColour] = useState("aqua")
-
+ 
   useEffect(() => {
-    LoadTab();
-    //eslint-disable-next-line react-hooks/exhaustive-deps
-  }, []);
+    props.updateActiveTabID(tabID)
+    LoadTab(tabID);
+  }, [tabID]);
 
-  //logger.trace("Entering cheese testing");
-  // Init load of notes
   async function LoadTab() {
     try {
-      console.log(new Date())
+      props.updateLoadingClass("loading")
 
       // let getEditorOptionsQuery = `SELECT option from tinymce_options WHERE type = 'toolbar' AND enabled`;
       // let editorOptionsResults = await sendAsync(getEditorOptionsQuery)
@@ -40,37 +41,42 @@ const Home = () => {
       //   setEditorOptions(tmpEditorOptionsString)
       // }
 
-      let getNotesquery = `SELECT * FROM notes WHERE tab = ${tab} ORDER BY [order] ASC`;
-      let notesResult = await sendAsync(getNotesquery);
-      if (notesResult.length > 0)
-        setNotes(notesResult)
+      let getNotesquery = `SELECT * FROM notes WHERE tab = ? ORDER BY [order] ASC`;
+      let notesResult = await sendAsync("GetNotes", getNotesquery, [(tabID ? tabID : props.defaultTabID)]);
+      if (notesResult.status == 1)
+        setNotes(notesResult.data)
+        await props.updateLoadingClass("loaded")
 
-      let getEditorOptionsQuery = `SELECT option from tinymce_options WHERE type = 'toolbar' AND enabled`;
-      let editorOptionsResults = await sendAsync(getEditorOptionsQuery)
-      //console.log(JSON.stringify(editorOptionsResults))
-      let tmpEditorOptionsString = "";
-      editorOptionsResults.forEach(o => {
-        tmpEditorOptionsString += o.option + " "
-      });
+
+      // // TinyMCE Options  
+      // let getEditorOptionsQuery = `SELECT option from tinymce_options WHERE type = 'toolbar' AND enabled`;
+      // let editorOptionsResults = await sendAsync("GetEditorOptions", getEditorOptionsQuery)
+      // //console.log(JSON.stringify(editorOptionsResults))
+      // let tmpEditorOptionsString = "";
+      // editorOptionsResults.forEach(o => {
+      //   tmpEditorOptionsString += o.option + " "
+      // });
       //setTemp(tmpEditorOptionsString)
       // console.log(tmpEditorOptionsString)
 
-      if (editorOptionsResults.length > 0)
-        setEditorOptions([tmpEditorOptionsString])
+      // if (editorOptionsResults.length > 0)
+      //   setEditorOptions([tmpEditorOptionsString])
+
+      setNoteHasFocus(false);
+
 
     } catch (error) {
-      console.log("There was an error loading the tab.")
+      console.log("There was an error loading the home page.", error)
     }
   }
 
   const AddNewNote = async (value) => {
-
     // Insert into db
     let query = `
     INSERT INTO notes ('order', tab)
     VALUES (?, ?);`;
-    await sendAsync(query, [(notes.length + 1), tab ]).then((result) => {
-      console.log("New Insert Result: " + JSON.stringify(result))
+    await sendAsync("AddNewNote",query, [(notes.length + 1), tabID]).then((result) => {
+      //console.log("New Insert Result: " + JSON.stringify(result))
       if (!result) {
         alert("There was an issue creating new note.")
       } else {
@@ -79,39 +85,44 @@ const Home = () => {
     });
 
     // Retrieve new note
-    let retriveNewRowQuery = `SELECT max(id) AS id FROM notes WHERE tab = ${tab};`;
-    await sendAsync(retriveNewRowQuery).then((result) => {
-      console.log("MAX: ")
-      console.log(JSON.stringify(result))
+    let retriveNewRowQuery = `SELECT max(id) AS id FROM notes WHERE tab = ${tabID};`;
+    await sendAsync("GetNewNote", retriveNewRowQuery).then((result) => {
       var newRowToAdd = {
-        id: result[0].id,
+        id: result.data[0].id,
         title: "",
         content: ""
       }
-      console.log(newRowToAdd)
       // Append to list
       setNotes(notes => [...notes, newRowToAdd])
     });
   }
 
-  const DeleteNote = (value) => {
-
+  const DeleteNote = async (value) => {
+  //async function DeleteNote (value){
     if (focussedNoteId == null) {
       alert("No note is selected to delete!")
       return;
     }
+  
+    var confirmDelete = await OkayCancel("Are you sure you want to delete this note?");
+    
+    if (confirmDelete.response == 1){
+      props.updateLoadingClass("loading")
 
-    if (1==1 /*window.confirm("Delete note?")*/) {
       let query = `DELETE FROM notes WHERE id = ?;`;
-      sendAsync(query, [focussedNoteId]).then((result) => {
+      await sendAsync("DeleteNote", query, [focussedNoteId]).then((result) => {
         if (!result) {
+          props.updateLoadingClass("loaded-error")
           alert("There was an issue deleting!")
         } else {
           const newNotesList = notes.filter((item) => item.id !== focussedNoteId);
           setNotes(newNotesList)
-          console.log("Notes: " + focussedNoteId + " has been deleted.")
+          props.updateLoadingClass("loaded")
         }
       });
+      setNoteHasFocus(false);
+      return;
+    } else {
       return;
     }
   }
@@ -124,39 +135,24 @@ const Home = () => {
     setNoteHasFocus(value)
   }
 
-
-  const SaveNote = (id, title, content) => {
-    //console.log("--------")
-    console.log("Saving note: " + id)
-    // console.log(content)
-    // console.log("--------")
-
-
-    //setSaveIconColour("orange")
-    setSaveIcon("cloud-upload-alt")
-    let query = `UPDATE notes SEdT title = ?, content = ? WHERE id = ?;`;
-
-    sendAsync(query, [title, content, id]).then((result) => {
+  const SaveNote = async  (id, title, content) => {
+    props.updateLoadingClass("loading")
+    let query = `UPDATE notes SET title = ?, content = ? WHERE id = ?;`;
+    sendAsync("SaveNote", query, [title, content, id]).then((result) => {
       if (!result) {
+        props.updateLoadingClass("loaded-error")
         alert("There was an issue saving!")
       } else {
-        console.log("Saved: " + id)
+        props.updateLoadingClass("loaded")
       }
     });
-    // var delayInMilliseconds = 1000; //1 second
-    // setTimeout(function () {
-    //   //your code to be executed after 1 second
-    //   setSaveIcon("cloud")
-    //   //setSaveIconColour("aqua")
-    // }, delayInMilliseconds);
   }
 
 
   return (
     <div id="Home" className="container-fluid mt-2">
-
-      {/* <Header title={test} /> */}
-
+      <div className="row">{tabID}</div>
+      
       {notes.length > 0 ?
         <div id="notes">
           {notes.map(r =>
@@ -187,16 +183,14 @@ const Home = () => {
       <BottomMenu
         id={focussedNoteId}
         noteHasFocus={noteHasFocus}
-        disabled={false}
+        // disabled={false}
         addNewNote={AddNewNote}
         deleteNote={DeleteNote}
-        saveNote={SaveNote} />
-
-
-
+        saveNote={SaveNote}
+        />
     </div>
   );
 
 }
 
-export default Home;
+

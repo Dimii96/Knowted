@@ -4,13 +4,16 @@
   --section-boxshadow: 73, 73, 73;
   --body-bg: #f1f1f1;
   --body-colour: #000000;
-  --charoal: #494949;
-  --charoal-rgb: 73, 73, 73;
+  --charcoal: #494949;
+  --charcoal-rgb: 73, 73, 73;
   --aqua: #116466;
   --aqua-rgb: 17, 100, 102;
   --lbrown: #d9b08c;
   --lbrown-rgb: 217, 176, 140;
   --tan: #ffcb9a;
+  --gold: #ffd643;
+  --red: #dc3545;
+  --green: #28a745;
   --tan-rgb: 255, 203, 154;
   --babyblue: #89cff0; /*  Original from pallete #D1E8E2*/
   --babyblue-rgb: 137, 207, 240;
@@ -453,7 +456,7 @@ body::-webkit-scrollbar-thumb:hover,
   /*bottom: 0;
      height: 32px;
      width: 100%;
-     border-top: 1px solid var(--charoal);*/
+     border-top: 1px solid var(--charcoal);*/
   /*background-color: #004e5a2b;*/
 }
 
@@ -574,22 +577,17 @@ body::-webkit-scrollbar-thumb:hover,
   padding-left: 5px;
   padding-right: 5px;
   color: var(--body-colour);
-  height: 40px;
-  min-width: 205px;
+  height: 42px;
+  /* min-width: 205px; */
 }
 
 /* #bm-container:hover {
   background-color: #fbb7b7;
 } */
 
-.bm-item {
-  margin-left: 4px;
-  margin-right: 4px;
-}
-
 #bm-main,
 #bm-toggle {
-  padding-top: 6px;
+  padding-top: 5px;
   width: auto;
   margin: 0 5px;
   border-radius: 5px;
@@ -599,6 +597,9 @@ body::-webkit-scrollbar-thumb:hover,
 
 .bm-item {
   display: inline;
+  margin-left: 4px;
+  margin-right: 4px;
+  margin-bottom: 2px;
 }
 
 .bm-toggle > [icon="cog"] {
@@ -607,6 +608,64 @@ body::-webkit-scrollbar-thumb:hover,
   font-size: 20px !important;
   border: red;
 }
+
+
+.loading, .loaded, .loaded-error{
+position: relative;
+}
+.loading::before{
+  content: '';
+  display: block;
+  position: absolute;
+  animation-duration: 1s;
+  animation-timing-function: linear;
+  animation-iteration-count: infinite;
+  border-bottom: 2px solid var(--gold);
+}
+
+
+.loaded::before, .loaded-error::before{
+  content: '';
+  display: block;
+  position: absolute;
+  animation-duration: 0.8s;
+  animation-timing-function: ease;
+  animation-iteration-count: 1;
+}
+.loaded::before {
+  border-bottom: 2px solid var(--green);
+}
+.loaded-error::before{
+  border-bottom: 2px solid var(--red);
+}
+
+
+.loading::before { animation-name: loading}
+.loaded::before, 
+.loaded-error::before { animation-name: loaded}
+
+/* @keyframes loading {
+  0%   { left: 0%;   right: 100%;    bottom: 0;}
+  20%  { left: 0%;   right: 75%;   bottom: 0;}
+  40%  { left: 25%;   right: 50%;   bottom: 0;}
+  60%  { left: 50%;   right: 25%;   bottom: 0;}
+  80%  { left: 75%; right: 0%;    bottom: 0;}
+  100%  { left: 100%; right: 0%;    bottom: 0;}
+} */
+@keyframes loading {
+  0%   { left: 0%;   right: 100%;    bottom: 0;}
+  50%  { left: 0%;   right: 0%;   bottom: 0;}
+  100%  { left: 100%; right: 0%;    bottom: 0;}
+}
+
+@keyframes loaded {
+  0%   { left: 50%;   right: 50%;    bottom: 0;border-width: 3px;}
+  10%  { left: 0%;   right: 0%;   bottom: 0;border-width: 3px;}
+  70%  { left: 0%;   right: 0%;   bottom: 0; border-width: 3px;}
+  100%  { left: 0%; right: 0%;   bottom: 0; border-width: 0px;}
+}
+
+
 
 .boxsizingBorder {
   -webkit-box-sizing: border-box;
@@ -648,42 +707,6 @@ div[contenteditable]:focus,
   /* background-color: #ff7979; */
 }
 
-/* ----------------------------- */
-
-.note-content-wrapper {
-  /* easy way to plop the elements on top of each other and have them both sized based on the tallest one's height */
-  display: grid;
-}
-.note-content-wrapper::after {
-  /* Note the weird space! Needed to preventy jumpy behavior */
-  content: attr(data-replicated-value) " ";
-
-  /* This is how textarea text behaves */
-  white-space: pre-wrap;
-
-  /* Hidden from view, clicks, and screen readers */
-  visibility: hidden;
-}
-
-.note-content-wrapper > .note-content {
-  /* You could leave this, but after a user resizes, then it ruins the auto sizing */
-  resize: none;
-
-  /* Firefox shows scrollbar on growth, you can hide like this. */
-  overflow: hidden;
-}
-.note-content-wrapper > .note-content,
-.note-content-wrapper::after {
-  /* Identical styling required!! */
-  border: 1px solid black;
-  padding: 0.5rem;
-  font: inherit;
-
-  /* Place on top of each other */
-  grid-area: 1 / 1 / 2 / 2;
-}
-
-/* ----------------------------------- */
 
 .profile-item {
   margin-bottom: 15px;
@@ -709,10 +732,8 @@ div[contenteditable]:focus,
 .title-beta {
   font-size: 12px;
   font-style: italic;
-  /* border: 1px dotted #f1f1f1; */
-  /* border-radius: 2px; */
   margin: 0 2px;
-  color: #ffd643;
+  color: var(--gold);
 }
 
 .separator {
@@ -801,10 +822,6 @@ input:checked + .checkbox-label:after {
   font-weight: bold !important;
 }
 
-/* .forum-b:not(:first-child) {
-   Gonna have to do some parent checks etc
-   */
-
 .forum-b:first-of-type {
   border-style: solid;
   border-width: 0px 0px 2px 2px;
@@ -823,10 +840,6 @@ input:checked + .checkbox-label:after {
   background-color: green !important;
 }
 
-/* #items .forum-b:not(:first-of-type) {
-   border-color: red !important;
- } */
-
 .dropdown-toggle.no-caret:after {
   content: none;
 }
@@ -835,8 +848,20 @@ input:checked + .checkbox-label:after {
   margin: 0 8px 0px -12px;
 }
 
-/* 
-.tox-editor-header:not(:focus), .tox-statusbar:not(:focus) {
-  /* display: none !important; *
-  background-color: blue;
-} */
+
+.tab-item {
+  padding: 0 1px;
+  border-bottom: 2px solid #f1f1f1;
+  max-width: 160px;
+  white-space: nowrap;
+  overflow: hidden;
+  text-overflow: ellipsis;
+}
+.tab-item.active  {
+  border:2px solid rgb(255, 255, 255);
+  border-bottom:0;
+  -moz-border-radius:5px 5px 0 0;
+  -webkit-border-radius:5px 5px 0 0;
+  border-radius: 5px 5px 0 0;
+
+}

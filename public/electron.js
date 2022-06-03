@@ -1,12 +1,9 @@
-const electron = require('electron');
-
-require('../src/message-control/main');
-
-const { app } = electron;
-const { BrowserWindow } = electron;
-
+const { app, BrowserWindow, Menu, ipcMain, dialog} = require('electron');
 const path = require('path');
 const isDev = require('electron-is-dev');
+const applicationMenu = require('./application-menu');
+
+require('../src/message-control/main');
 
 let mainWindow;
 
@@ -37,10 +34,14 @@ function createWindow() {
     mainWindow.on('closed', () => {
         mainWindow = null;
     });
-    mainWindow.webContents.openDevTools();
+    //mainWindow.webContents.openDevTools();
 }
 
-app.on('ready', createWindow);
+app.on('ready', () => {
+    Menu.setApplicationMenu(applicationMenu);
+    createWindow();
+
+});
 
 app.on('window-all-closed', () => {
     if (process.platform !== 'darwin') {
@@ -51,5 +52,18 @@ app.on('window-all-closed', () => {
 app.on('activate', () => {
     if (mainWindow === null) {
         createWindow();
+    }
+});
+
+ipcMain.on('show-dialog', async (event, dialogOptions) => {
+//https://www.electronjs.org/docs/latest/api/dialog#dialogshowmessageboxbrowserwindow-options
+    try {
+        console.log(dialogOptions)
+        let result = await dialog.showMessageBox(mainWindow, dialogOptions);
+        event.sender.send("show-dialog-result", result);
+    } catch (error) {
+        console.log("Catch: ", error)
+        event.sender.send("show-dialog-result", result);
+        
     }
 });

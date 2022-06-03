@@ -22,7 +22,7 @@ const Section = ({ id, title, content }) => {
     let query = `UPDATE notes SET content = '${response}' WHERE id = ${id};`;
     setTest(query)
 
-    await sendAsync(query).then((result) => {
+    await sendAsync("SaveNote", query).then((result) => {
       if (!result) {
         alert("There was an issue saving!")
       }
@@ -36,11 +36,11 @@ const Section = ({ id, title, content }) => {
     }, delayInMilliseconds);
   }
 
-  function DeleteNote() {
+  async function DeleteNote() {
 
     let query = `DELETE FROM notes WHERE id = '${id}';`;
     //if(confirm("Delete note?")) {
-    sendAsync(query).then((result) => {
+    await sendAsync("DeleteNote", query).then((result) => {
       if (!result) {
         alert("There was an issue deleting!")
       } else {

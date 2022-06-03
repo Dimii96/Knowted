@@ -1,13 +1,17 @@
-import React, { useState, useEffect /*, Component */ } from 'react';
+import React, { useState, useEffect } from 'react';
 import { Link } from "react-router-dom"
 import sendAsync from '../message-control/renderer'
 
-function Settings() {
+// Components
+import EditTabField from '../components/EditTabField';
+
+export default function Settings(props) {
 
   const [tinyMCESettings, setTinyMCESettings] = useState([]);
+  const [tabList, setTabList] = useState([]);
 
-
-  useEffect(() => {
+  useEffect(() => { 
+    props.updateLoadingClass("loading")
     LoadSettings();
     //eslint-disable-next-line react-hooks/exhaustive-deps
   }, []);
@@ -15,23 +19,39 @@ function Settings() {
   // Init load of settings
   async function LoadSettings() {
 
-    // Retrieve Tiny.MCE settings
-    let query = `SELECT * FROM tinymce_options WHERE type = 'toolbar'`;
+    // // Retrieve Tiny.MCE settings
+    // let query = `SELECT * FROM tinymce_options WHERE type = 'toolbar'`;
+    // try {
+    //   let result = await sendAsync("LoadTinyMCESettings", query);
+    //   setTinyMCESettings(result)
+    // } catch (error) {
+    //   alert("There was an issue retrieving Editor Options.")
+    // }
+
+     // Retrieve Tabs
+    let query = `SELECT * FROM tabs ORDER BY 'order' ASC;'`;
     try {
-      let result = await sendAsync(query);
-      setTinyMCESettings(result)
+      let result = await sendAsync("GetTabs", query);
+      setTabList(result.data)
     } catch (error) {
-      alert("There was an issue retriving Editor Options.")
+      alert("There was an issue retrieving tab.")
     }
+    props.updateLoadingClass("loaded")
+
   }
 
   async function UpdateSetting(id, checked) {
 
     try {
+      props.updateLoadingClass("loading")
       let enabled = checked ? 1 : 0;
       let query = `UPDATE tinymce_options SET enabled = ${enabled} WHERE id = ${id}`;
-      let result = await sendAsync(query)
+      let result = await sendAsync("UpdateSettings", query)
+      props.updateLoadingClass("loaded")
+
     } catch (error) {
+      props.updateLoadingClass("loaded-error")
+
       console.log("Failed to save setting. Please retry later.")
     }
     finally {
@@ -40,11 +60,62 @@ function Settings() {
     }
 
   }
+  // const UpdateTabTitle = async(id, title) => {
+  //   window.location.href = "/settings";
+  // }
+
+  // const DeleteTab = async(id) => {
+
+  //   try {
+  //     console.log("Settings/DeleteTab/" + id);
+  //     let deleteTabQuery = 'DELETE FROM tabs WHERE id = ?;';
+  //     let result = await sendAsync("DeleteTab", deleteTabQuery, [id])
+  //     if(result.status) {
+  //       window.location.reload();
+  //     } else {
+  //       console.log("There was an error deleting the tab.")
+  //     }
+
+  //   } catch (error) {
+
+  //   }
+  // }
+  
 
 
   return (
     <div className="container">
       <div id="page-title">Settings</div>
+
+      <div className="section">
+        <div className="section-content">
+          <div className="section-title subheading px-2">
+            <label>Tabs</label>
+          </div>
+          <div className="section-main mx-3">
+              {tabList.map(t => 
+               <EditTabField key={t.id} tab={t} updateLoadingClass={props.updateLoadingClass} /*deleteTab={DeleteTab}*/ updateTabTitle={props.updateTabTitle} />
+              )}
+              {/* <div className='alert alert-light p-1 m-0'><strong>Note:</strong> Deleted tabs are archived for 7 days before permanatly being removed. You can view and retrive archived tabs <a href='#' className='alert-link'>here</a></div> */}
+          </div>
+        </div>
+      </div>
+
+      <div className="section">
+        <div className="section-content">
+          <div className="section-title subheading px-2">
+            <label>Tips and Help</label>
+          </div>
+          <div className="section-main">
+            <ul>
+              <li>Your notes will automatically save when you click out of the currently active notes box.</li>
+              <li>More application settings and options go here in this page as developement progresses </li>
+              <li><Link className="App-link" to="/">Link to Home</Link></li>
+            </ul>
+          </div>
+        </div>
+      </div>
+
 
       {/* <div className="section">
         <div className="section-content">
@@ -61,11 +132,9 @@ function Settings() {
                 </div>
               )}
             </form>
-
           </div>
         </div>
       </div> */}
-
 
       {/*
       <div className="section">
@@ -113,26 +182,10 @@ function Settings() {
         </div>
       </div>
       */}
-
-
-      <div className="section">
-        <div className="section-content">
-          <div className="section-title subheading px-2">
-            <label>Tips and Help</label>
-          </div>
-          <div className="section-main">
-            <ul>
-              <li>Application settings and options will go here</li>
-              <li>Your notes and not headings will automatically save when you click out of the currently active notes box.</li>
-              <li><Link className="App-link" to="/">Link to Home</Link></li>
-            </ul>
-          </div>
-        </div>
-      </div>
+     
 
 
     </div>
   );
 }
 
-export default Settings;
