@@ -9,12 +9,6 @@ export default function send(type, sql, paramaters = []) {
       resolve(result);
     });
   });
-    // return new Promise((resolve) => {
-    //     ipcRenderer.once('asynchronous-reply', (_, arg) => {
-    //         resolve(arg);
-    //     });
-    //     ipcRenderer.send('asynchronous-message', type, sql, paramaters);
-    // });
 }
 
 

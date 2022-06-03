@@ -5,12 +5,13 @@ import sendAsync from '../message-control/renderer'
 // Components
 import EditTabField from '../components/EditTabField';
 
-function Settings(props) {
+export default function Settings(props) {
 
   const [tinyMCESettings, setTinyMCESettings] = useState([]);
   const [tabList, setTabList] = useState([]);
 
-  useEffect(() => {
+  useEffect(() => { 
+    props.updateLoadingClass("loading")
     LoadSettings();
     //eslint-disable-next-line react-hooks/exhaustive-deps
   }, []);
@@ -35,15 +36,22 @@ function Settings(props) {
     } catch (error) {
       alert("There was an issue retrieving tab.")
     }
+    props.updateLoadingClass("loaded")
+
   }
 
   async function UpdateSetting(id, checked) {
 
     try {
+      props.updateLoadingClass("loading")
       let enabled = checked ? 1 : 0;
       let query = `UPDATE tinymce_options SET enabled = ${enabled} WHERE id = ${id}`;
       let result = await sendAsync("UpdateSettings", query)
+      props.updateLoadingClass("loaded")
+
     } catch (error) {
+      props.updateLoadingClass("loaded-error")
+
       console.log("Failed to save setting. Please retry later.")
     }
     finally {
@@ -86,7 +94,7 @@ function Settings(props) {
           </div>
           <div className="section-main mx-3">
               {tabList.map(t => 
-               <EditTabField key={t.id} tab={t} /*deleteTab={DeleteTab}*/ updateTabTitle={props.updateTabTitle} />
+               <EditTabField key={t.id} tab={t} updateLoadingClass={props.updateLoadingClass} /*deleteTab={DeleteTab}*/ updateTabTitle={props.updateTabTitle} />
               )}
               {/* <div className='alert alert-light p-1 m-0'><strong>Note:</strong> Deleted tabs are archived for 7 days before permanatly being removed. You can view and retrive archived tabs <a href='#' className='alert-link'>here</a></div> */}
           </div>
@@ -100,8 +108,8 @@ function Settings(props) {
           </div>
           <div className="section-main">
             <ul>
-              <li>More application settings and options will go here</li>
-              <li>Your notes and note headings (currently unavailable) will automatically save when you click out of the currently active notes box.</li>
+              <li>Your notes will automatically save when you click out of the currently active notes box.</li>
+              <li>More application settings and options go here in this page as developement progresses </li>
               <li><Link className="App-link" to="/">Link to Home</Link></li>
             </ul>
           </div>
@@ -124,11 +132,9 @@ function Settings(props) {
                 </div>
               )}
             </form>
-
           </div>
         </div>
       </div> */}
-
 
       {/*
       <div className="section">
@@ -183,4 +189,3 @@ function Settings(props) {
   );
 }
 
-export default Settings;

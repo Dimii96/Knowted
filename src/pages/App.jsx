@@ -37,21 +37,30 @@ library.add(faCoffee, faPlus, faExclamationCircle, faCircle, faSave,
 
 export default function App() {
     const [tabList, setTabList] = useState([])
-    const [activeTabID, setActiveTabID] = useState(1)
+    const [loadingClass, setLoadingClass] = useState("");
+    const [defaultTabID, setDefaultTabID] = useState();
+    const [activeTabID, setActiveTabID] = useState()
     
     useEffect (() => {
         LoadTabs();
     }, []);
 
+
     const LoadTabs = async () => {
+        setLoadingClass("loading")
         let getTabsquery = `SELECT * FROM tabs ORDER BY [order] ASC`;
         let tabsResult = await sendAsync("GetTabs", getTabsquery);
-        console.log("Tabs loaded: ", tabsResult.data.length)
+        setDefaultTabID(tabsResult.data[0].id)
         setTabList(tabsResult.data)
     };
 
     const UpdateTabTitle = (id, text) => {
         console.log("Update TabID: " + id + " to " + text)
+    }
+
+    const UpdateActiveTabID = (value) => {
+        console.log("Updating active ID", value)
+        setActiveTabID(value)
     }
 
     const DeleteTab = (id) => {
@@ -60,12 +69,20 @@ export default function App() {
         // setTabList(tabList)
     }
 
+    function UpdateLoadingClass(value) {
+        setLoadingClass("");
+        setTimeout(function() {
+            setLoadingClass(value); // Need to set a timeout as DOM doesn't update if instantly updating the useState
+        }, 0)   
+    }
+
     return (
     <Router>
         <main>
-            <nav className="navbar navbar-expand navbar-dark bg-dark">
+            <nav className={"navbar navbar-expand navbar-dark bg-dark " + loadingClass}>
                 <div className="container-fluid">
-                    <Link className="navbar-brand px-1" to="/" style={{ border: '1px solid white', borderRadius: '5px' }}>Knowted<span className="title-beta">beta</span></Link>
+                    {/* <a className="navbar-brand px-1" style={{ border: '1px solid white', borderRadius: '5px' }}>Knowted<span className="title-beta">beta</span></a> */}
+                    <Link className="navbar-brand px-1" to={`/tab/${defaultTabID}`} style={{ border: '1px solid white', borderRadius: '5px' }}>Knowted<span className="title-beta">beta</span></Link>
                     <button className="navbar-toggler" type="button" data-target="#navbarNav" aria-controls="navbarNav" aria-expanded="false" aria-label="Toggle navigation">
                         <span className="navbar-toggler-icon" />
                     </button>
@@ -76,7 +93,7 @@ export default function App() {
                                 <Link className="nav-link" to="/"><FontAwesomeIcon icon="home" /></Link>
                             </li> */}
                             {(tabList.length > 0) 
-                            ? <Tabs tabs={tabList} deleteTab={DeleteTab} />
+                            ? <Tabs tabs={tabList} activeTabID={activeTabID} updateActiveTabID={UpdateActiveTabID} deleteTab={DeleteTab} updateLoadingClass={UpdateLoadingClass} defaultTabID={defaultTabID} />
                             : null }
                             <li className="nav-item">
                                 <Link className="nav-link" to="/settings"><FontAwesomeIcon icon="cog" /></Link>
@@ -87,11 +104,13 @@ export default function App() {
             </nav>
         </main>
         <Switch>
-                <Route exact path="/" component={Home} /> 
-                <Route path="/tab/:tabID" component={Home} />
-                <Route path="/about" component={About} />
-                <Route path="/settings" component={Settings} updateTabTitle={UpdateTabTitle}  deleteTab={DeleteTab} />
-                <Route component={Error} />
+            {/* <Route exact path="/" render={(props) => <Home setLoadingClass={SetLoadingClass} {...props} />} />
+            <Route path="/tab/:tabID" render={(props) => <Home setLoadingClass={SetLoadingClass} {...props} />} /> */}
+            <Route exact path="/" render={() => <Home updateLoadingClass={UpdateLoadingClass} updateActiveTabID={UpdateActiveTabID}  />} />  
+            <Route path="/tab/:tabID" render={() => <Home updateLoadingClass={UpdateLoadingClass}  updateActiveTabID={UpdateActiveTabID} /> } />
+            <Route path="/about" component={About}  />
+            <Route exact path="/settings" render={() => <Settings updateLoadingClass={UpdateLoadingClass} /> } />  
+            <Route component={Error} />
         </Switch>
         {/* <Footer /> */}
     </Router>

@@ -2,19 +2,19 @@
 import React, { useState, useEffect, useContext } from 'react';
 import sendAsync from '../message-control/renderer';
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome'
+import MessageBox from '../message-control/confirmationBox'
 
 // component
 import Tab from './Tab'
 
 
-function Tabs(props) {
+export default function Tabs(props) {
     const [tabs, setTabs] = useState(props.tabs)
-    const [activeTabID, setActiveTabID] = useState(1)
 
     useEffect (() => {
-        //LoadTabs();
-        //console.log("Loading tabs...", props.tabs)
-    }, []);
+        console.log("Tabs List: ", props.activeTabID)
+        LoadTabs();
+    }, [props.activeTabID]);
 
     const LoadTabs = async () => {
         let getTabsquery = `SELECT * FROM tabs ORDER BY [order] ASC`;
@@ -22,14 +22,15 @@ function Tabs(props) {
         setTabs(tabsResult.data)
     };
 
-    const SetActiveTabID = (id) => 
-        setActiveTabID(id)
+    const UpdateActiveTabID = (id) => 
+        props.updateActiveTabID(id)
     
-
     const AddNewTab = async () => {
+        props.updateLoadingClass("loading");
         try {
             if(tabs.length > 4) {
-                alert("Maximum tab limit reached.");
+                await MessageBox("Maximum tab limit reached.");
+                props.updateLoadingClass("");
                 return;
             }
             let query = `
@@ -39,9 +40,8 @@ function Tabs(props) {
             let newTabOrderNo = tabs.length + 1;
             let newTitle = "Tab " + newTabOrderNo;
             await sendAsync("CreateNewTab",query, [newTitle, newTabOrderNo]).then((result) => {
-                console.log("New Tab Insert: " + JSON.stringify(result))
                 if (result.status == 1) {
-               
+                
                     // Add tab to nav bar
                     var newTabToAdd = {
                         id: result.data[0].id,
@@ -49,20 +49,23 @@ function Tabs(props) {
                         order: newTabOrderNo
                     }
                     setTabs(tabs => [...tabs, newTabToAdd])
+                    props.updateLoadingClass("loaded");
+
                 } else {
                     console.log("There was an issue creating new tab.")
+                    props.updateLoadingClass("loaded-error");
                 }     
         
             });
-        } catch (err) {
-            console.log("There was an error creating new tab");
+        } catch (error) {
+            console.log("There was an error creating new tab: ", error);
         }
     }
   
     return (
         <>
             {tabs.map(t =>
-                <Tab key={t.id} tab={t} activeTabID={activeTabID} setActiveTabID={SetActiveTabID} />
+                <Tab key={t.id} tab={t} activeTabID={props.activeTabID} updateActiveTabID={UpdateActiveTabID} defaultTabID={props.defaultTabID}/>
             )}
             <li className="nav-item tab-item" title='Create new tab'>
                 <button className="btn nav-link" onClick={() => AddNewTab()}><FontAwesomeIcon icon="plus" /></button>
@@ -70,5 +73,3 @@ function Tabs(props) {
         </>
     )
 }
-
-export default Tabs;

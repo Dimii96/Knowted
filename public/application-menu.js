@@ -5,22 +5,17 @@ const template = [
         label: 'File',
         submenu: [
             {
-                label: 'Reload',
-                accelerator: 'CommandOrControl+R',
-                role: 'forceReload',
-            },
-            {
-                label: 'Options',
-                accelerator: 'CommandOrControl+O',
-                role: 'forceReload',
+              label: 'Reload',
+              accelerator: 'CommandOrControl+R',
+              role: 'forceReload',
             },
             {
               type: 'separator'
             },
             {
-                label: 'Quit',
-                accelerator: 'CommandOrControl+Q',
-                role: 'quit',
+              label: 'Quit',
+              accelerator: 'CommandOrControl+Q',
+              role: 'quit',
             },
         ]
       },
