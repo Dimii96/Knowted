@@ -48,10 +48,6 @@ export default function EditTabField(props) {
   const  DeleteTab = async () => {
     try {
       props.updateLoadingClass("loading")
-      if(props.tabCount <= 1) {
-        messageBox("Unable to delete only tab.");
-        return;
-      }
       let confirmDelete = await OkayCancel('Are you sure you want to delete "' + props.tab.title + '" and all the notes within?');
       if(confirmDelete.response) {
         // First delete the notes
