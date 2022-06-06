@@ -1,6 +1,8 @@
 # Build folder and files #
 ##########################
 release-builds/
+build
+dist
 
 # Development folders and files #
 #################################
