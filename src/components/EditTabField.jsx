@@ -50,6 +50,17 @@ export default function EditTabField(props) {
       props.updateLoadingClass("loading")
       let confirmDelete = await OkayCancel('Are you sure you want to delete "' + props.tab.title + '" and all the notes within?');
       if(confirmDelete.response) {
+        // First delete the notes
+        let deleteNotesQuery = `DELETE FROM notes WHERE tabid = ?`;
+        let deleteNotes = await sendAsync("DeleteNotes", deleteNotesQuery, [props.tab.id]);
+        if(deleteNotes.status = 1) {
+          console.log("Notes Deleted");
+        } else {
+          await messageBox("Could not delete the tab as there was an issue deleting the notes within the tab. ");
+          return null;
+        }
+
+        
         let updateQuery = `DELETE FROM tabs WHERE id = ?`;
         let result = await sendAsync("DeleteTab", updateQuery, [props.tab.id]);
         if(result.status = 1) {
