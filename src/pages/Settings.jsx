@@ -94,7 +94,7 @@ export default function Settings(props) {
           </div>
           <div className="section-main mx-3">
               {tabList.map(t => 
-               <EditTabField key={t.id} tab={t} updateLoadingClass={props.updateLoadingClass} /*deleteTab={DeleteTab}*/ updateTabTitle={props.updateTabTitle} />
+               <EditTabField key={t.id} tab={t} updateLoadingClass={props.updateLoadingClass} tabCount={tabList.length} /*deleteTab={DeleteTab}*/ updateTabTitle={props.updateTabTitle} />
               )}
               {/* <div className='alert alert-light p-1 m-0'><strong>Note:</strong> Deleted tabs are archived for 7 days before permanatly being removed. You can view and retrive archived tabs <a href='#' className='alert-link'>here</a></div> */}
           </div>
