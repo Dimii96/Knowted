@@ -1,10 +1,8 @@
 // imports
 import React, { useState, useRef, useEffect } from "react";
 import PropTypes from "prop-types";
-import sendAsync from "../message-control/renderer";
-import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
 
-import { Editor } from "@tinymce/tinymce-react";
+// import { Editor } from "@tinymce/tinymce-react";
 
 // import tinymce from "tinymce";
 

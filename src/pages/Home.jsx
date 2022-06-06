@@ -1,34 +1,45 @@
 // imports
-import React, { useState, useEffect /*, Component */ ,componentDidUpdate } from 'react';
-import sendAsync /*, { storeSet, storeGet, storeDelete, storeCount } */ from '../message-control/renderer'
-import { OkayCancel } from '../message-control/confirmationBox'
-import BottomMenu from '../components/BottomMenu'
+import React, { useState, useEffect } from 'react';
+import sendAsync  from '../message-control/renderer'
+import MessageBox, { OkayCancel } from '../message-control/confirmationBox'
+import { useHistory  } from "react-router-dom";
+import { useParams } from 'react-router-dom/cjs/react-router-dom.min';
+import { FontAwesomeIcon } from '@fortawesome/react-fontawesome'
 
 // components
 import Note from '../components/Note'
-import { jsonDiff } from 'prettier';
-import { isWindows } from 'prettier';
-import { useParams } from 'react-router-dom/cjs/react-router-dom.min';
-
+import BottomMenu from '../components/BottomMenu'
 
 
 export default function Home(props) {
-  
   const { tabID } = useParams();
+  const history = useHistory();
 
   const [notes, setNotes] = useState([]);
   const [focussedNoteId, setFocussedNoteId] = useState(null)
   const [noteHasFocus, setNoteHasFocus] = useState(false)
   const [editorOptions, setEditorOptions] = useState()
- 
+  const [selectedTabID, setSelectedTabID] = useState(tabID)
+
   useEffect(() => {
-    props.updateActiveTabID(tabID)
-    LoadTab(tabID);
+    setSelectedTabID(tabID ? tabID : props.defaultTabID)
   }, [tabID]);
+  
+  useEffect(() => {
+    //history.push("/error");
+    //props.updateLoadingClass("loading")
+
+    try {      
+        props.updateActiveTabID(selectedTabID)
+        LoadTab(selectedTabID);
+      } catch (error) {
+        history("/error")
+      }
+  }, [selectedTabID]);
 
   async function LoadTab() {
     try {
-      props.updateLoadingClass("loading")
+      //props.updateLoadingClass("loading")
 
       // let getEditorOptionsQuery = `SELECT option from tinymce_options WHERE type = 'toolbar' AND enabled`;
       // let editorOptionsResults = await sendAsync(getEditorOptionsQuery)
@@ -42,7 +53,7 @@ export default function Home(props) {
       // }
 
       let getNotesquery = `SELECT * FROM notes WHERE tab = ? ORDER BY [order] ASC`;
-      let notesResult = await sendAsync("GetNotes", getNotesquery, [(tabID ? tabID : props.defaultTabID)]);
+      let notesResult = await sendAsync("GetNotes", getNotesquery, [selectedTabID]);
       if (notesResult.status == 1)
         setNotes(notesResult.data)
         await props.updateLoadingClass("loaded")
@@ -70,12 +81,17 @@ export default function Home(props) {
     }
   }
 
-  const AddNewNote = async (value) => {
+  const AddNewNote = async () => {
+
+    if(notes.length >= 100) {
+      MessageBox("Maximum number of notes (100) reached.");
+      return;
+    }
     // Insert into db
     let query = `
     INSERT INTO notes ('order', tab)
     VALUES (?, ?);`;
-    await sendAsync("AddNewNote",query, [(notes.length + 1), tabID]).then((result) => {
+    await sendAsync("AddNewNote",query, [(notes.length + 1), selectedTabID]).then((result) => {
       //console.log("New Insert Result: " + JSON.stringify(result))
       if (!result) {
         alert("There was an issue creating new note.")
@@ -85,8 +101,8 @@ export default function Home(props) {
     });
 
     // Retrieve new note
-    let retriveNewRowQuery = `SELECT max(id) AS id FROM notes WHERE tab = ${tabID};`;
-    await sendAsync("GetNewNote", retriveNewRowQuery).then((result) => {
+    let retriveNewRowQuery = `SELECT max(id) AS id FROM notes WHERE tab = ?;`;
+    await sendAsync("GetNewNote", retriveNewRowQuery, [selectedTabID]).then((result) => {
       var newRowToAdd = {
         id: result.data[0].id,
         title: "",
@@ -98,16 +114,14 @@ export default function Home(props) {
   }
 
   const DeleteNote = async (value) => {
-  //async function DeleteNote (value){
     if (focussedNoteId == null) {
       alert("No note is selected to delete!")
       return;
     }
   
+    props.updateLoadingClass("loading")
     var confirmDelete = await OkayCancel("Are you sure you want to delete this note?");
-    
     if (confirmDelete.response == 1){
-      props.updateLoadingClass("loading")
 
       let query = `DELETE FROM notes WHERE id = ?;`;
       await sendAsync("DeleteNote", query, [focussedNoteId]).then((result) => {
@@ -123,6 +137,7 @@ export default function Home(props) {
       setNoteHasFocus(false);
       return;
     } else {
+      props.updateLoadingClass("")
       return;
     }
   }
@@ -148,11 +163,9 @@ export default function Home(props) {
     });
   }
 
-
   return (
     <div id="Home" className="container-fluid mt-2">
-      <div className="row">{tabID}</div>
-      
+     
       {notes.length > 0 ?
         <div id="notes">
           {notes.map(r =>
@@ -167,9 +180,10 @@ export default function Home(props) {
               showBottomMenu={showBottomMenu}
               saveNote={SaveNote}
               editorOptions={editorOptions} />
-            /* <div className="col-12 text-center">
-              <button className="btn btn-primary btn-sm rounded-circle">+</button>
-            </div> */
+            /* <button className={"btn btn-outline-dark btn-sm" }
+           onClick={() => AddNewNote}>
+          <FontAwesomeIcon icon="plus-circle" />
+        </button>  */
             // </div>
           )}
         </div>

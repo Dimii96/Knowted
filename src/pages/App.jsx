@@ -5,19 +5,17 @@ import sendAsync from '../message-control/renderer';
 
 // Pages 
 import Home from "./Home"
-import About from "./About"
+// import About from "./About"
 import Settings from "./Settings"
 import Error from "./Error"
 
 
 // Components
-// import Footer from './components/Footer'
 import Tabs from '../components/Tabs'
 
 
 // Font Awesome Icons
 import { library } from '@fortawesome/fontawesome-svg-core'
-//import { fab } from '@fortawesome/free-brands-svg-icons'
 import {
     faCoffee, faPlus, faExclamationCircle, faCircle, faSave,
     faEdit, faCheck, faTimes, faCog, faFilter, faGripLinesVertical, faHome,
@@ -40,11 +38,10 @@ export default function App() {
     const [loadingClass, setLoadingClass] = useState("");
     const [defaultTabID, setDefaultTabID] = useState();
     const [activeTabID, setActiveTabID] = useState()
-    
+     
     useEffect (() => {
         LoadTabs();
     }, []);
-
 
     const LoadTabs = async () => {
         setLoadingClass("loading")
@@ -59,7 +56,6 @@ export default function App() {
     }
 
     const UpdateActiveTabID = (value) => {
-        console.log("Updating active ID", value)
         setActiveTabID(value)
     }
 
@@ -72,7 +68,8 @@ export default function App() {
     function UpdateLoadingClass(value) {
         setLoadingClass("");
         setTimeout(function() {
-            setLoadingClass(value); // Need to set a timeout as DOM doesn't update if instantly updating the useState
+            // Need to set a timeout as DOM doesn't update if instantly updating the useState
+            setLoadingClass(value); 
         }, 0)   
     }
 
@@ -89,9 +86,6 @@ export default function App() {
 
                     <div className="collapse navbar-collapse  justify-content-end" id="navbarNav">
                         <ul className="navbar-nav white">
-                            {/* <li className="nav-item">
-                                <Link className="nav-link" to="/"><FontAwesomeIcon icon="home" /></Link>
-                            </li> */}
                             {(tabList.length > 0) 
                             ? <Tabs tabs={tabList} activeTabID={activeTabID} updateActiveTabID={UpdateActiveTabID} deleteTab={DeleteTab} updateLoadingClass={UpdateLoadingClass} defaultTabID={defaultTabID} />
                             : null }
@@ -104,14 +98,11 @@ export default function App() {
             </nav>
         </main>
         <Switch>
-            {/* <Route exact path="/" render={(props) => <Home setLoadingClass={SetLoadingClass} {...props} />} />
-            <Route path="/tab/:tabID" render={(props) => <Home setLoadingClass={SetLoadingClass} {...props} />} /> */}
-            <Route exact path="/" render={() => <Home updateLoadingClass={UpdateLoadingClass} updateActiveTabID={UpdateActiveTabID}  />} />  
+            <Route exact path="/" render={() => <Home updateLoadingClass={UpdateLoadingClass} updateActiveTabID={UpdateActiveTabID} defaultTabID={defaultTabID}  />} />  
             <Route path="/tab/:tabID" render={() => <Home updateLoadingClass={UpdateLoadingClass}  updateActiveTabID={UpdateActiveTabID} /> } />
-            <Route path="/about" component={About}  />
+            {/* <Route path="/about" component={About}  /> */}
             <Route exact path="/settings" render={() => <Settings updateLoadingClass={UpdateLoadingClass} /> } />  
-            <Route component={Error} />
+            <Route path="/error" render={() => <Error updateLoadingClass={UpdateLoadingClass} />} />  
         </Switch>
-        {/* <Footer /> */}
     </Router>
 )};

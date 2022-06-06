@@ -12,7 +12,6 @@ export default function Tabs(props) {
     const [tabs, setTabs] = useState(props.tabs)
 
     useEffect (() => {
-        console.log("Tabs List: ", props.activeTabID)
         LoadTabs();
     }, [props.activeTabID]);
 
@@ -22,8 +21,9 @@ export default function Tabs(props) {
         setTabs(tabsResult.data)
     };
 
-    const UpdateActiveTabID = (id) => 
+    const UpdateActiveTabID = (id) => {
         props.updateActiveTabID(id)
+    }
     
     const AddNewTab = async () => {
         props.updateLoadingClass("loading");
