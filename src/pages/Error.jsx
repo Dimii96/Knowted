@@ -1,12 +1,17 @@
+import { eventPropTypes } from '@tinymce/tinymce-react/lib/cjs/main/ts/components/EditorPropTypes';
 import React, { useState, useEffect /*, Component */ } from 'react';
 import { Link } from "react-router-dom"
-import sendAsync from '../message-control/renderer'
+import { useParams } from 'react-router-dom/cjs/react-router-dom.min';
 
-function Error() {
+function Error(props) {
+  const { message } = useParams();
 
+  useEffect(() => {
+    props.updateLoadingClass("");
+  }, [])
   return (
     <div className="container">
-      <div id="page-title">Error</div>  
+      <div id="page-title">Oops!</div>  
    
       <div className="section">
         <div className="section-content">
@@ -15,7 +20,11 @@ function Error() {
           </div>
           <div className="section-main">
             <ul>
-              <li><Link className="App-link" to="/">Link to Home</Link></li>
+              { (message) ?
+                <li>{message}</li>
+                : null
+              }
+              <li><Link className="App-link" to="/">Go to first tab</Link></li>
             </ul>
           </div>
         </div>
