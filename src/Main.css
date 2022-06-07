@@ -881,8 +881,8 @@ input:checked + .checkbox-label:after {
 }
 
 #CharacterCounter svg{
-  height: 3vh;
-  width: 3vh;
+  height: 4vh;
+  width: 4vh;
   margin-top: -3px;
 }
 
