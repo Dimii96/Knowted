@@ -1,10 +1,12 @@
 // imports
-import React, { useState, useEffect } from 'react';
+import React from 'react';
 import PropTypes from 'prop-types'
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome'
 
+// Components
+import CharacterCounter from './CharacterCounter'
 
-const BottomMenu = ({ id, disabled, addNewNote, deleteNote, noteHasFocus }) => {
+export default function BottomMenu ({ id, disabled, addNewNote, deleteNote, noteHasFocus, characterCount }) {
   
   return (
 
@@ -15,16 +17,18 @@ const BottomMenu = ({ id, disabled, addNewNote, deleteNote, noteHasFocus }) => {
           <FontAwesomeIcon icon="plus-circle" />
         </button>
 
-          <>
-            <div className="bm-item ">
+            {/* <div className="bm-item ">
               <FontAwesomeIcon icon="grip-lines-vertical" className="mx-1" />
-            </div>
+            </div> */}
             <button className={"btn btn-outline-dark btn-sm bm-item "}
               onMouseDown={(e) => deleteNote(id)}
               disabled={!noteHasFocus} >
               <FontAwesomeIcon icon="trash" />
             </button>
-          </>
+            {/* <div className="bm-item ">
+              <FontAwesomeIcon icon="grip-lines-vertical" className="mx-1" />
+            </div> */}
+            <CharacterCounter numChar={characterCount} />         
       </div>
 
     </div>
@@ -39,7 +43,6 @@ BottomMenu.defaultProps = {
   title: "Task Tracker"
 }
 
-export default BottomMenu;
 
 
 

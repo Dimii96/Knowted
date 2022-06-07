@@ -1,6 +1,7 @@
 // imports
 import React, { useState, useRef, useEffect } from "react";
 import PropTypes from "prop-types";
+import MessageBox from '../message-control/confirmationBox'
 
 // import { Editor } from "@tinymce/tinymce-react";
 
@@ -15,11 +16,11 @@ const Note = ({
   showBottomMenu,
   saveNote,
   editorOptions,
+  updateCharacterCount,
+  updateLoadingClass
 }) => {
   const [contentState, setContentState] = useState(content);
   const [titleState, setTitleState] = useState(title);
-  const [toolbar, setToolbar] = useState("");
-  const [enabledd, setEnabled] = useState(true);
 
   // useEffect(() => {
   //   if (editorOptions) {
@@ -52,17 +53,33 @@ const Note = ({
   //   }
   // }
 
-  const handleFocus = () => {
+  const handleFocus = (event) => {
     showBottomMenu(true);
     sendNoteIDToParent(id);
+    updateCharacterCount(event.currentTarget.innerText.length);
+
   };
 
   const SaveNote = (event) => {
+    if(event.currentTarget.innerText.length > 10000)
+    {
+      MessageBox("This note has exceeded the character limit and the note will not be saved. Please alter your note to fit within the character limit.");
+      updateLoadingClass("loaded-error")
+      return;
+    }
+
     setContentState(event.currentTarget.innerText);
     saveNote(id, titleState, event.currentTarget.innerText);
     showBottomMenu(false);
-    // sendNoteIDToParent(null);
   };
+
+  const UpdateCharacterCount = (event) => {
+    if(event.currentTarget.innerText.length > 10000)
+    {
+      updateLoadingClass("loaded-error")
+    }
+    updateCharacterCount(event.currentTarget.innerText.length);
+  }
 
   const editorRef = useRef(null);
   const log = () => {
@@ -96,11 +113,8 @@ const Note = ({
             suppressContentEditableWarning={true}
             className="note-content"
             value={contentState ? contentState : ""}
-            //onKeyDown={e => setContentState(e.target.innerHTML)}
-            onInput={(e) => {
-              //SaveNote;
-              //this.cursor = e.target.selectionStart;
-            }}
+            maxLength={100}
+            onKeyUp={UpdateCharacterCount}
             onBlur={SaveNote}
             onFocus={handleFocus}
           >

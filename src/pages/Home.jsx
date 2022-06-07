@@ -20,6 +20,7 @@ export default function Home(props) {
   const [noteHasFocus, setNoteHasFocus] = useState(false)
   const [editorOptions, setEditorOptions] = useState()
   const [selectedTabID, setSelectedTabID] = useState(tabID)
+  const [characterCount, setCharacterCount] = useState(0)
 
   useEffect(() => {
     setSelectedTabID(tabID ? tabID : props.defaultTabID)
@@ -150,8 +151,13 @@ export default function Home(props) {
     setNoteHasFocus(value)
   }
 
+  const UpdateCharacterCount = (value) => {
+    setCharacterCount(value)
+  }
+  
   const SaveNote = async  (id, title, content) => {
     props.updateLoadingClass("loading")
+    setCharacterCount(0);
     let query = `UPDATE notes SET title = ?, content = ? WHERE id = ?;`;
     sendAsync("SaveNote", query, [title, content, id]).then((result) => {
       if (!result) {
@@ -179,7 +185,8 @@ export default function Home(props) {
               sendNoteIDToParent={sendNoteIDToParent}
               showBottomMenu={showBottomMenu}
               saveNote={SaveNote}
-              editorOptions={editorOptions} />
+              editorOptions={editorOptions} 
+              updateCharacterCount={UpdateCharacterCount}/>
             /* <button className={"btn btn-outline-dark btn-sm" }
            onClick={() => AddNewNote}>
           <FontAwesomeIcon icon="plus-circle" />
@@ -201,6 +208,7 @@ export default function Home(props) {
         addNewNote={AddNewNote}
         deleteNote={DeleteNote}
         saveNote={SaveNote}
+        characterCount={characterCount}
         />
     </div>
   );

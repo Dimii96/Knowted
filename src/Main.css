@@ -865,3 +865,30 @@ input:checked + .checkbox-label:after {
   border-radius: 5px 5px 0 0;
 
 }
+
+/* CHARACTER COUNTER */
+#CharacterCounter{
+ 
+}
+
+#CharacterCounter circle{
+  fill: none;
+  stroke-width: 3;
+}
+
+#CharacterCounter #gray{
+  stroke: lightgray;
+}
+
+#CharacterCounter svg{
+  height: 3vh;
+  width: 3vh;
+  margin-top: -3px;
+}
+
+#CharacterCounter span {
+  margin-left: 5px;
+  padding: 0 4px;
+}
+  
+/* END CHARACTER COUNT */
