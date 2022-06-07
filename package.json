@@ -1,7 +1,9 @@
 {
-  "name": "Knowted",
+  "name": "knowted",
+  "productName":"knowted",
   "version": "0.1.0",
   "private": true,
+  "main": "public/electron.js",
   "dependencies": {
     "@fortawesome/fontawesome-svg-core": "^1.2.36",
     "@fortawesome/free-solid-svg-icons": "^5.15.4",
@@ -32,7 +34,6 @@
     "rebuild-sqlite3": "electron-rebuild -f -w sqlite3",
     "rebuild": "electron-rebuild -f -w better-sqlit3"
   },
-  "main": "public/electron.js",
   "eslintConfig": {
     "extends": "react-app"
   },
@@ -51,7 +52,7 @@
   "devDependencies": {
     "concurrently": "^6.3.0",
     "electron": "^15.3.0",
-    "electron-builder": "^22.8.0",
+    "electron-packager": "^15.5.1",
     "electron-rebuild": "^3.2.3",
     "eslint-config-airbnb": "^18.1.0",
     "eslint-config-prettier": "^6.10.1",

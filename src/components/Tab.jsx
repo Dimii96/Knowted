@@ -6,7 +6,7 @@ function Tab(props) {
     const [activeClass, setActiveClass] = useState(props.activeTabID)
 
     useEffect(() =>{
-        setActiveClass((props.tab.id == props.activeTabID)  ? "active" : null)
+        setActiveClass((props.tab.id === props.activeTabID)  ? "active" : null)
     }, [props.activeTabID])
 
     return (

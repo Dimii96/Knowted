@@ -7,7 +7,7 @@ import EditTabField from '../components/EditTabField';
 
 export default function Settings(props) {
 
-  const [tinyMCESettings, setTinyMCESettings] = useState([]);
+  // const [tinyMCESettings, setTinyMCESettings] = useState([]);
   const [tabList, setTabList] = useState([]);
 
   useEffect(() => { 

@@ -9,7 +9,7 @@ export default function EditTabField(props) {
 
 
   useEffect(() => {
-    setHasChanged(props.tab.title != title ? true : false)
+    setHasChanged(props.tab.title !== title ? true : false)
   }, [title]);
    
   async function UpdateTitle () {
@@ -17,7 +17,7 @@ export default function EditTabField(props) {
     try {
       props.updateLoadingClass("loading")
       let tmpNewTitle = title
-      if(!title || title == "") 
+      if(!title || title === "") 
       { 
         tmpNewTitle = "Tab " + (props.tab.order + 1);
         setTitle(tmpNewTitle);
@@ -29,7 +29,7 @@ export default function EditTabField(props) {
       
       let updateQuery = `UPDATE tabs SET title = ? WHERE id = ?`;
       let result = sendAsync("UpdateTab", updateQuery, [tmpNewTitle, props.tab.id]);
-      if(result.status = 1) {
+      if(result.status == 1) {
         window.location.reload(); // Cheating here and just refreshing page instead of dynimcally updating data
         // props.tab.title = title;
         // props.updateTabTitle(props.tab.id, tmpNewTitle);

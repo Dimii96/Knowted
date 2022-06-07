@@ -1,5 +1,5 @@
 // imports
-import React, { useState, useEffect, useContext } from 'react';
+import React, { useState, useEffect } from 'react';
 import sendAsync from '../message-control/renderer';
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome'
 import MessageBox from '../message-control/confirmationBox'
@@ -40,8 +40,7 @@ export default function Tabs(props) {
             let newTabOrderNo = tabs.length + 1;
             let newTitle = "Tab " + newTabOrderNo;
             await sendAsync("CreateNewTab",query, [newTitle, newTabOrderNo]).then((result) => {
-                if (result.status == 1) {
-                
+                if (result.status === 1) {
                     // Add tab to nav bar
                     var newTabToAdd = {
                         id: result.data[0].id,

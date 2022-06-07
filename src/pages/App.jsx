@@ -1,6 +1,6 @@
 // imports
 import React, {useEffect, useState} from 'react';
-import { HashRouter as Router, Route, Link, Switch } from 'react-router-dom'
+import { HashRouter, Route, Link, Switch } from 'react-router-dom'
 import sendAsync from '../message-control/renderer';
 
 // Pages 
@@ -74,7 +74,7 @@ export default function App() {
     }
 
     return (
-    <Router>
+    <HashRouter>
         <main>
             <nav className={"navbar navbar-expand navbar-dark bg-dark " + loadingClass}>
                 <div className="container-fluid">
@@ -104,5 +104,5 @@ export default function App() {
             <Route exact path="/settings" render={() => <Settings updateLoadingClass={UpdateLoadingClass} /> } />  
             <Route path="/error" render={() => <Error updateLoadingClass={UpdateLoadingClass} />} />  
         </Switch>
-    </Router>
+    </HashRouter>
 )};

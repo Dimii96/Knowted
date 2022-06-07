@@ -1,8 +1,8 @@
+// requires
 const { app, BrowserWindow, Menu, ipcMain, dialog} = require('electron');
 const path = require('path');
 const isDev = require('electron-is-dev');
 const applicationMenu = require('./application-menu');
-
 require('../src/message-control/main');
 
 let mainWindow;
@@ -28,8 +28,8 @@ function createWindow() {
     });
     mainWindow.loadURL(
         isDev
-            ? 'http://localhost:3000'
-            : `file://${path.join(__dirname, '../build/index.html')}`
+        ? 'http://localhost:3000'
+        : `file://${path.join(__dirname, '../build/index.html')}`
     );
     mainWindow.on('closed', () => {
         mainWindow = null;
