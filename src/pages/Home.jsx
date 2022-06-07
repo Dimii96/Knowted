@@ -4,7 +4,6 @@ import sendAsync  from '../message-control/renderer'
 import MessageBox, { OkayCancel } from '../message-control/confirmationBox'
 import { useHistory  } from "react-router-dom";
 import { useParams } from 'react-router-dom/cjs/react-router-dom.min';
-import { FontAwesomeIcon } from '@fortawesome/react-fontawesome'
 
 // components
 import Note from '../components/Note'
@@ -55,7 +54,7 @@ export default function Home(props) {
 
       let getNotesquery = `SELECT * FROM notes WHERE tab = ? ORDER BY [order] ASC`;
       let notesResult = await sendAsync("GetNotes", getNotesquery, [selectedTabID]);
-      if (notesResult.status == 1)
+      if (notesResult.status === 1)
         setNotes(notesResult.data)
         await props.updateLoadingClass("loaded")
 
@@ -122,7 +121,7 @@ export default function Home(props) {
   
     props.updateLoadingClass("loading")
     var confirmDelete = await OkayCancel("Are you sure you want to delete this note?");
-    if (confirmDelete.response == 1){
+    if (confirmDelete.response === 1){
 
       let query = `DELETE FROM notes WHERE id = ?;`;
       await sendAsync("DeleteNote", query, [focussedNoteId]).then((result) => {
@@ -186,6 +185,7 @@ export default function Home(props) {
               showBottomMenu={showBottomMenu}
               saveNote={SaveNote}
               editorOptions={editorOptions} 
+              updateLoadingClass={props.updateLoadingClass} 
               updateCharacterCount={UpdateCharacterCount}/>
             /* <button className={"btn btn-outline-dark btn-sm" }
            onClick={() => AddNewNote}>
