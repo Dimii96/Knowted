@@ -58,7 +58,6 @@ export default function Home(props) {
         setNotes(notesResult.data)
         await props.updateLoadingClass("loaded")
 
-
       // // TinyMCE Options  
       // let getEditorOptionsQuery = `SELECT option from tinymce_options WHERE type = 'toolbar' AND enabled`;
       // let editorOptionsResults = await sendAsync("GetEditorOptions", getEditorOptionsQuery)
