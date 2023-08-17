@@ -18,7 +18,7 @@
     "react": "^16.13.1",
     "react-dom": "^16.13.1",
     "react-router-dom": "^5.3.0",
-    "react-scripts": "^3.4.4",
+    "react-scripts": "^5.0.1",
     "sqlite3": "^5.0.8",
     "tinymce": "^5.10.2"
   },
