@@ -53,7 +53,7 @@ $ npm run electron-mac
 License
 ----
 
-MIT
+ GPL-3.0 license
 
 
 
